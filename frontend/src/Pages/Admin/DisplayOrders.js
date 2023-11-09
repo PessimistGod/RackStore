@@ -98,7 +98,7 @@ const DisplayOrders = () => {
                       Product Name: {products[item.productId]?.productName || 'Product Not Found'}
                     </div>
                     <div className="product-price">
-                      Price: ${products[item.productId]?.price || 'N/A'}
+                      Price: ₹{products[item.productId]?.price || 'N/A'}
                     </div>
                     <div className="product-days">
                       Days: {products[item.productId]?.days || 'N/A'}

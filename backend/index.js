@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 const corsOptions = {
-    origin: ["http://localhost:3000"],
+    origin: ["https://rack-store-frontend.vercel.app","https://rack-store-backend.vercel.app","http://localhost:3000"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
 };

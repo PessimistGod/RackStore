@@ -31,11 +31,11 @@ const Navbar = () => {
   return (
     <div className='navbar-bg container'>
       <div className='content'>
-        <div className='logo-img'>
-          <img src="" alt="Img" />
+        <div className='logo-img flexCenter'>
+          <img src="./D2R logo.jpeg" alt="Img" className='logo-img-src flexCenter'/>
         </div>
         <div className='logo-text'>
-          Logo
+        D2R
         </div>
         <span className='right-line'></span>
       </div>
@@ -47,6 +47,8 @@ const Navbar = () => {
         <Link to={'/admin-orders'} className='admin-view'>View Orders</Link>
         <span className='right-line'></span>
         <Link to={'/admin-create'} className='admin-view'>Create Rack</Link>
+        <span className='right-line'></span>
+        <Link to={'/admin-manage'} className='admin-view'>Manage Racks</Link>
         </div>
 
         <div className='flexCenter'>

@@ -12,6 +12,8 @@ const ItemCreate = () => {
     days: '',
     price: '',
     image: '',
+    state: '',
+    city: '',
   });
 
   const handleChange = (e) => {
@@ -39,13 +41,15 @@ const ItemCreate = () => {
 
     try {
       const response = await axios.post(`${API_URL}/api/prod/products`, item);
-      if(response){
+      if (response) {
         setItem({
-            productName: '',
-            days: '',
-            price: '',
-            image: '',
-          })
+          productName: '',
+          days: '',
+          price: '',
+          image: '',
+          state: '',
+          city: '',
+        });
       }
       console.log('Item created successfully:', response.data);
     } catch (error) {
@@ -54,8 +58,8 @@ const ItemCreate = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2>Create a New Item</h2>
+    <div className="form-container-create">
+      <h2>Create a New Rack</h2>
       <form className="item-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="image" className="label">
@@ -114,8 +118,34 @@ const ItemCreate = () => {
             className="input"
           />
         </div>
+        <div className="form-group">
+          <label htmlFor="state" className="label">
+            State
+          </label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            value={item.state}
+            onChange={handleChange}
+            className="input"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="city" className="label">
+            City
+          </label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={item.city}
+            onChange={handleChange}
+            className="input"
+          />
+        </div>
         <button type="submit" className="button">
-          Create Item
+          Create Rack
         </button>
       </form>
     </div>

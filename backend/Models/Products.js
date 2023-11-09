@@ -16,6 +16,18 @@ const productSchema = new mongoose.Schema({
     image:{
         type:String,
         required:true
+    },
+    state:{
+        type:String,
+        required:true,
+    },
+    city:{
+        type:String,
+        required:true,
+    },
+    availability:{
+        type:Boolean,
+        default:true
     }
 
 },{timestamps:true})

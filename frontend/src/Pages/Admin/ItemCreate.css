@@ -1,0 +1,90 @@
+
+/* Form container */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    margin-top: 5rem;
+}
+
+/* Form item */
+.item-form {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 600px;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 20px;
+
+}
+
+/* Label */
+.label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    text-align: left; /* Left-align the label text */
+}
+
+/* Input field */
+.input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Image preview */
+.image-preview {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Preview image */
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+
+}
+
+/* Button */
+.button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    outline: none;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.button:active {
+    transform: scale(0.95);
+}
+
+.button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.preview{
+    object-fit: contain;
+}

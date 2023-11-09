@@ -1,0 +1,47 @@
+.order-placed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  
+  .order-success {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .icon {
+    background-color: #4CAF50;
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .icon svg {
+    display: block;
+    color: #ffffff;
+    font-size: 40px;
+  }
+  
+  .order-success h2 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .order-success p {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  

@@ -6,9 +6,12 @@ import './Style/Cart.css';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import Checkout from './Checkout';
 import { useCart } from '../Context/CartContext';
+import { useToast } from '../Context/ToastContext';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const { showSuccessToast, showErrorToast } = useToast();
+
   const [cartItems, setCartItems] = useState([]);
   const [userId, setUserId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +58,9 @@ const Cart = () => {
       await axios.delete(`${API_URL}/api/cart/${itemId}`);
       setCartItems((items) => items.filter((item) => item._id !== itemId));
       fetchCartItemCount();
+      showSuccessToast('Item Deleted')
     } catch (error) {
+        showErrorToast('Error deleting')
       console.error('Error deleting item:', error);
     }
   };
@@ -151,7 +156,10 @@ const Cart = () => {
             phoneNumber: '',
             address: '',
           });
-  
+
+          setTimeout(() => {
+            showSuccessToast('Rack Purchased')
+          }, 700);
           navigate('/order-placed');
         }
       }

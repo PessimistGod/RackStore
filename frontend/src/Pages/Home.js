@@ -4,6 +4,7 @@ import { useCart } from '../Context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { useToast } from '../Context/ToastContext';
 
 const Home = () => {
   const { cart, setCart, fetchCartItemCount } = useCart();
@@ -12,7 +13,9 @@ const Home = () => {
   const [userId, setUserId] = useState('');
   const API_URL = process.env.REACT_APP_API_URL;
 
+  const { showSuccessToast, showErrorToast } = useToast();
   useEffect(() => {
+
     const fetchData = async () => {
       const storedToken = localStorage.getItem('token');
       if (!storedToken) {
@@ -43,7 +46,10 @@ const Home = () => {
 
       setCart([...cart, productId]);
       fetchCartItemCount();
+      showSuccessToast('Rack Added to Cart')
     } catch (error) {
+      showErrorToast('Error Adding Rack')
+
       console.error('Error adding product to cart:', error);
     }
   };

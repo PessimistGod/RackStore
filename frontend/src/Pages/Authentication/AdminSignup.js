@@ -3,8 +3,12 @@ import { adminSignup } from './Validators/BackendInterface';
 import { handleEmail, handlePassword, handleConfirmPass } from './Validators/EmailAndPassword';
 import './Signup.css';
 import { Link } from 'react-router-dom';
+import { useToast } from '../../Context/ToastContext';
+
 
 const AdminSignup = () => {
+  const { showSuccessToast, showErrorToast } = useToast();
+
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -100,14 +104,14 @@ const AdminSignup = () => {
             spanPass: '',
             spanCPass: '',
           })
-        console.log('Signup successful');
+          showSuccessToast('Signup successful')
       } else {
         // Error signing up
-        console.log('Error signing up');
+        showErrorToast('Check Credentials')
       }
     } else {
       // Form validation failed
-      console.log('Form validation failed');
+      showErrorToast('Form validation failed')
     }
   };
 

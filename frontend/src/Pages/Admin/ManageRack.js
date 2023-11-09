@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { useToast } from '../../Context/ToastContext';
 
 const ManageRack = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL;
+  const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -41,10 +43,11 @@ const ManageRack = () => {
   const handleAvailability = async (productId, availability) => {
     try {
       await axios.put(`${API_URL}/api/prod/products/${productId}`, { availability });
-      // Fetch updated products after changing availability
       const response = await axios.get(`${API_URL}/api/prod/products`);
       setProducts(response.data);
+      showSuccessToast('Changed Availability Setting')
     } catch (error) {
+        showErrorToast("Error Fetching Try Later")
       console.error('Error updating availability:', error);
     }
   };
@@ -55,7 +58,10 @@ const ManageRack = () => {
       // Fetch updated products after deletion
       const response = await axios.get(`${API_URL}/api/prod/products`);
       setProducts(response.data);
+      showSuccessToast('Product Deleted')
     } catch (error) {
+        showErrorToast("Error Fetching Try Later")
+
       console.error('Error deleting product:', error);
     }
   };

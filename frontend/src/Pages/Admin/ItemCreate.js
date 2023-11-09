@@ -3,10 +3,13 @@ import './ItemCreate.css';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useToast } from '../../Context/ToastContext';
 
 const ItemCreate = () => {
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
+  const { showSuccessToast, showErrorToast } = useToast();
+
   const [item, setItem] = useState({
     productName: '',
     days: '',
@@ -31,7 +34,7 @@ const ItemCreate = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       if (!decodedToken.isAdmin) {
-        navigate('/');
+        navigate('/login');
       }
     }
   }, [navigate]);
@@ -51,8 +54,9 @@ const ItemCreate = () => {
           city: '',
         });
       }
-      console.log('Item created successfully:', response.data);
+      showSuccessToast('Rack Added Successfully')
     } catch (error) {
+      showErrorToast("Error Try Again")
       console.error('Error creating item:', error);
     }
   };

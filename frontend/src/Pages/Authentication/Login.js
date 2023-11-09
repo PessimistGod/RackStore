@@ -3,8 +3,11 @@ import { loginUser } from './Validators/BackendInterface';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { useToast } from '../../Context/ToastContext';
 
 const Login = () => {
+  const { showSuccessToast, showErrorToast } = useToast();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,28 +35,46 @@ const Login = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const response = await loginUser(formData);
-    if (response && response.token) {
-      // Login successful
-      const token = response.token;
-      localStorage.setItem('token', token);
-      const decodedToken = jwtDecode(token);
-      setFormData({
-        email: '',
-        password: '',
-      })
-      if(decodedToken.isAdmin){
-        navigate('/admin-orders')
-      }else if(decodedToken.id && !decodedToken.isAdmin){
-        navigate('/')
+  
+    try {
+      const response = await loginUser(formData);
+  
+      if (response && response.token) {
+        // Login successful
+        const token = response.token;
+        localStorage.setItem('token', token);
+        const decodedToken = jwtDecode(token);
+        setFormData({
+          email: '',
+          password: '',
+        });
+  
+        if (decodedToken.isAdmin) {
+          navigate('/admin-orders');
+        } else if (decodedToken.id && !decodedToken.isAdmin) {
+          navigate('/');
+        }
+  
+        setTimeout(() => {
+          showSuccessToast('Login Successful');
+        }, 600);
+      } else {
+        // Handle other response conditions
+        setTimeout(() => {
+          showErrorToast('Check Credentials');
+        }, 600);
       }
-      console.log('Login successful');
-    } else {
-      // Error logging in
-      console.log('Error logging in');
+    } catch (error) {
+      // Handle the 401 error
+      if (error.response && error.response.status === 401) {
+        showErrorToast('Check your credentials');
+      } else {
+        // Handle other errors
+        console.error('Login error:', error);
+      }
     }
   };
+  
 
   return (
     <div className="login-container">

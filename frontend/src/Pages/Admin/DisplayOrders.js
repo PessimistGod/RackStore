@@ -3,12 +3,14 @@ import axios from 'axios';
 import './DisplayOrders.css';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../Context/ToastContext';
 
 const DisplayOrders = () => {
     const [orders, setOrders] = useState([]);
     const [products, setProducts] = useState({});
     const [loading, setLoading] = useState(false);
     const API_URL = process.env.REACT_APP_API_URL;
+    const { showSuccessToast, showErrorToast } = useToast();
 
     const navigate = useNavigate();
   
@@ -26,19 +28,20 @@ const DisplayOrders = () => {
           }
           setProducts(productDetails);
         } catch (error) {
+          showErrorToast('Server Busy')
           console.error('Error fetching data:', error);
         }
       };
   
       fetchData();
-    }, [API_URL]);
+    }, [API_URL,showErrorToast]);
 
     useEffect(()=>{
         const token = localStorage.getItem('token');
         if(token){
             const decodedToken = jwtDecode(token);
             if(!decodedToken.isAdmin){
-                navigate('/')
+                navigate('/login')
             }
         }
     },[navigate])
@@ -54,6 +57,7 @@ const DisplayOrders = () => {
           // Update the orders list
           const updatedOrders = orders.filter(order => order._id !== orderId);
           setOrders(updatedOrders);
+          showSuccessToast('Delivered Success')
         } catch (error) {
           console.error('Error marking as delivered:', error);
         } finally {
@@ -104,7 +108,7 @@ const DisplayOrders = () => {
 
                 
               ))}
-               <button className="deliver-button"
+               <button className="deliver-button "
               onClick={() => handleDeliveredClick(order._id)}
               disabled={loading}
             >

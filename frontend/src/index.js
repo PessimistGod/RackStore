@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { CartProvider } from './Context/CartContext';
+import { ToastProvider } from './Context/ToastContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <CartProvider>
+      <ToastProvider>
 
     <App />
+    </ToastProvider>
       </CartProvider>
   </React.StrictMode>
 );

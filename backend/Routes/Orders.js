@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../Models/Orders');
+const Product = require('../Models/Products')
+const History = require('../Models/History')
 
 
 router.post('/new-order', async (req, res) => {
@@ -49,4 +51,40 @@ router.get('/get-orders', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+
+  router.post('/set-order-history', async (req, res) => {
+    try {
+      const { userDetails, cartItems, userId } = req.body;
+  
+      const newOrder = await History.create({
+        userDetails,
+        cartItems,
+        userId,
+      });
+  
+      for (const cartItem of cartItems) {
+        const { productId } = cartItem;
+        await Product.findByIdAndUpdate(productId, { availability: false });
+      }
+  
+      res.json({ message: 'Order placed successfully', orderId: newOrder._id });
+    } catch (error) {
+      console.error('Error placing order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.get('/history/:userId', async (req, res) => {
+    try {
+      const { userId } = req.params;
+  
+      const historyDetails = await History.find({ userId });
+  
+      res.status(200).json(historyDetails);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
 module.exports = router;

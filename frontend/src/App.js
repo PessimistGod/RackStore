@@ -10,6 +10,7 @@ import ItemCreate from './Pages/Admin/ItemCreate';
 import DisplayOrders from './Pages/Admin/DisplayOrders';
 import AdminSignup from './Pages/Authentication/AdminSignup';
 import ManageRack from './Pages/Admin/ManageRack';
+import History from './Pages/History';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
             <Route path="/admin-orders" element={<DisplayOrders />}/>
             <Route path="/admin-signup" element={<AdminSignup />}/>
             <Route path="/admin-manage" element={<ManageRack />}/>
+            <Route path="/history" element={<History />}/>
+
 
 
           </Route>

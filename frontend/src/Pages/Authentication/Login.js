@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { loginUser } from './Validators/BackendInterface';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,6 +17,19 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  useEffect(() => {
+    const tokenMain = localStorage.getItem('token');
+    if (tokenMain) {
+      const decodedTokenMain = jwtDecode(tokenMain);
+      if (decodedTokenMain.isAdmin) {
+        navigate('/admin-orders');
+      } else if (decodedTokenMain.id && !decodedTokenMain.isAdmin) {
+        navigate('/');
+      }
+    }
+  }, [navigate]);
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,8 +45,7 @@ const Login = () => {
       })
       if(decodedToken.isAdmin){
         navigate('/admin-orders')
-      }else{
-
+      }else if(decodedToken.id && !decodedToken.isAdmin){
         navigate('/')
       }
       console.log('Login successful');

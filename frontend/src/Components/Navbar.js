@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
@@ -11,6 +11,14 @@ const Navbar = () => {
   const [name, setName] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate()
+
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('token');
+    setName(null);
+    navigate('/login');
+  }, [navigate]);
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     if(token){
@@ -20,13 +28,10 @@ const Navbar = () => {
     }else {
       setName(null);
     }
-  }, [navigate])
+
+ 
+  }, [navigate,handleLogout])
   
-  function handleLogout (){
-    localStorage.removeItem('token')
-    setName(null);
-    navigate('/login')
-  }
 
   return (
     <div className='navbar-bg container'>
@@ -69,7 +74,9 @@ const Navbar = () => {
         <span className='right-line'></span>
 
         <Link to="/cart" className='cartNav-container flexCenter'><BiCartAlt size={30}/>{cartCount}</Link>
-      
+        <span className='right-line'></span>
+        <Link to={'/history'} className='admin-view'>History</Link>
+        
       </div>
 
   

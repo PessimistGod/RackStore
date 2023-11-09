@@ -6,7 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
 const Home = () => {
-  const { cart, setCart,fetchCartItemCount } = useCart();
+  const { cart, setCart, fetchCartItemCount } = useCart();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [userId, setUserId] = useState('');
@@ -34,8 +34,6 @@ const Home = () => {
     fetchData();
   }, [navigate, API_URL]);
 
-
-
   const handleAddToCart = async (productId) => {
     try {
       await axios.post(`${API_URL}/api/cart/add-to-cart`, {
@@ -52,20 +50,22 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {products.map((product) => (
-        <div className="card" key={product._id}>
-          <img src={product.image} alt={product.name} />
-          <div className="card-details">
-            <h3>{product.name}</h3>
-            <p>Price: {product.price}</p>
-            <p>Days: {product.days}</p>
-      
+      {products
+        .filter((product) => product.availability) 
+        .map((product) => (
+          <div className="card" key={product._id}>
+            <img src={product.image} alt={product.name} />
+            <div className="card-details">
+              <h3>{product.name}</h3>
+              <p>Price: {product.price}</p>
+              <p>Days: {product.days}</p>
+
               <button onClick={() => handleAddToCart(product._id)}>
                 Add to Cart
               </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

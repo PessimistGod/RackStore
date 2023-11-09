@@ -57,11 +57,13 @@ const Home = () => {
             <img src={product.image} alt={product.name} />
             <div className="card-details">
               <h3>{product.name}</h3>
-              <p>Price: {product.price}</p>
+              <p>Price: ₹{product.price}</p>
               <p>Days: {product.days}</p>
+              <p>Location: {product.city},{product.state}</p>
+
 
               <button onClick={() => handleAddToCart(product._id)}>
-                Add to Cart
+                Purchase Rack
               </button>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useToast } from '../../Context/ToastContext';
+import styles from './ManageRack.module.css';
 
 const ManageRack = () => {
   const navigate = useNavigate();
@@ -68,21 +69,21 @@ const ManageRack = () => {
   
 
   return (
-    <div className="home-container">
+    <div className={ styles.home_container}>
       {products.map((product) => (
-        <div className="card" key={product._id}>
+        <div className={ styles.card} key={product._id}>
           <img src={product.image} alt={product.productName} />
-          <div className="card-details">
+          <div className={ styles.card_details}>
             <h3>{product.productName}</h3>
             <p>Price: ₹{product.price}</p>
             <p>Days: {product.days}</p>
             <p>Location: {product.city}, {product.state}</p>
           </div>
           <div>
-            <button className='btn-availability' onClick={() => handleAvailability(product._id, !product.availability)}>
+            <button className={styles.btn_availability} onClick={() => handleAvailability(product._id, !product.availability)}>
               {product.availability ? 'Make Unavailable' : 'Make Available'}
             </button>
-            <button className='btn-delete-product' onClick={() => handleDelete(product._id)}>Delete</button>
+            <button className={styles.btn_delete_product} onClick={() => handleDelete(product._id)}>Delete</button>
           </div>
         </div>
       ))}

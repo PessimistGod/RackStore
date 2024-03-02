@@ -1,5 +1,6 @@
 import React from 'react';
-import './Style/Checkout.css';
+// import './Style/Checkout.css';
+import styles from './Style/Checkout.module.css'
 
 const Checkout = ({
     userDetails,
@@ -9,9 +10,9 @@ const Checkout = ({
     isModalOpen,
 }) => {
     return isModalOpen ? (
-        <div className="checkout-modal-container">
-            <div className="modal-content">
-                <span className="close" onClick={handleClose}>
+        <div className={styles.checkout_modal_container}>
+            <div className={styles.modal_content}>
+                <span className={styles.close} onClick={handleClose}>
                     &times;
                 </span>
                 <h3>Enter Your Details</h3>
@@ -47,7 +48,7 @@ const Checkout = ({
                         handleUserDetailsChange('address', e.target.value)
                     }
                 />
-                <button className="checkout-button-pay" onClick={handlePay}>
+                <button className={styles.checkout_button_pay} onClick={handlePay}>
                     Pay
                 </button>
             </div>

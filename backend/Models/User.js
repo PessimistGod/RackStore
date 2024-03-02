@@ -13,6 +13,14 @@ const userSchema = new mongoose.Schema({
         type:String,
         required: true,
     },
+    gst :{
+        type: String,
+        required: false,
+    },
+    isMerchant : {
+        type:Boolean,
+        default:false
+    },
     isAdmin:{
         type:Boolean,
         default:false

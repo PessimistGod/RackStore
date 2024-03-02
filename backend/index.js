@@ -7,6 +7,7 @@ const authenticate = require('./Routes/AuthApi');
 const cartList = require('./Routes/CartApi')
 const product = require('./Routes/ProductApi')
 const orders = require('./Routes/Orders')
+const checkout = require('./Routes/Checkout')
 
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.json());
 
 
 const corsOptions = {
-    origin: ["http://localhost:3000"],
+    origin: [ "https://rack-store-frontend-three.vercel.app", "https://rack-store-backend-ten.vercel.app",  "http://localhost:3000", "*"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
 };
@@ -31,6 +32,8 @@ app.use('/api/auth', authenticate);
 app.use('/api/prod', product);
 app.use('/api/cart', cartList);
 app.use('/api/orders', orders);
+app.use('/api/stripe', checkout);
+
 
 
 

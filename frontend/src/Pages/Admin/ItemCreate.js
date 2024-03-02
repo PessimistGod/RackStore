@@ -1,24 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import './ItemCreate.css';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useToast } from '../../Context/ToastContext';
+import React, { useEffect, useState } from "react";
+import styles from "./ItemCreate.module.css";
+import { jwtDecode } from "jwt-decode";
+
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useToast } from "../../Context/ToastContext";
+import GoogleMapReact from "google-map-react";
+
+import marker from "../../Assets/marker.png";
 
 const ItemCreate = () => {
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
   const { showSuccessToast, showErrorToast } = useToast();
 
-  const [item, setItem] = useState({
-    productName: '',
-    days: '',
-    price: '',
-    image: '',
-    state: '',
-    city: '',
+  const [GmapKey, setGmapKey] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const [zoom, setZoom] = useState(4);
+  const [center, setCenter] = useState({
+    lat: 20.5937,
+    lng: 78.9629,
   });
 
+  const defaultProps = {
+    center: {
+      lat: 20.5937,
+      lng: 78.9629,
+    },
+    zoom: 4,
+  };
+
+  const [item, setItem] = useState({
+    productName: "",
+    days: "",
+    price: "",
+    image: "",
+    state: "",
+    pincode: "",
+    lati: "",
+    longi: "",
+    city: "",
+  });
+  const [mapKey, setMapKey] = useState(0);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setItem({ ...item, [name]: value });
@@ -30,14 +54,27 @@ const ItemCreate = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       if (!decodedToken.isAdmin) {
-        navigate('/login');
+        navigate("/login");
       }
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/auth/mapper`);
+        setGmapKey(response.data);
+      } catch (error) {
+        console.error("Error fetching API key:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,27 +83,79 @@ const ItemCreate = () => {
       const response = await axios.post(`${API_URL}/api/prod/products`, item);
       if (response) {
         setItem({
-          productName: '',
-          days: '',
-          price: '',
-          image: '',
-          state: '',
-          city: '',
+          productName: "",
+          days: "",
+          price: "",
+          image: "",
+          state: "",
+          pincode: "",
+          lati: "",
+          longi: "",
+          city: "",
         });
+        setSelectedLocation(null)
+        setCenter(defaultProps?.center)
+        setZoom(defaultProps?.zoom)
       }
-      showSuccessToast('Rack Added Successfully')
+      showSuccessToast("Rack Added Successfully");
     } catch (error) {
-      showErrorToast("Error Try Again")
-      console.error('Error creating item:', error);
+      showErrorToast("Error Try Again");
+      console.error("Error creating item:", error);
     }
   };
 
+  useEffect(() => {
+    const fetchLatlongByPincode = async () => {
+      try {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${item?.pincode}&key=${GmapKey}`
+        );
+        const { lat, lng } = response.data.results[0]?.geometry?.location;
+        setCenter({ ...center, lat, lng });
+        setZoom(18);
+        setSelectedLocation({ lat, lng });
+        setItem({ ...item, lati: lat, longi: lng });
+      } catch (error) {
+        console.error("Error fetching lat long:", error);
+      }
+    };
+    if (item?.pincode?.length === 6) {
+      fetchLatlongByPincode();
+    }
+  }, [item.pincode, GmapKey]);
+
+  const handleMapClick = ({ lat, lng }) => {
+    setSelectedLocation({ lat, lng });
+    setCenter({ lat, lng });
+    setZoom(18);
+    setItem({ ...item, lati: lat, longi: lng });
+  };
+
+
+
+  const renderMarkers = (map, maps) => {
+    if (selectedLocation) {
+      let marker = new maps.Marker({
+        position: { lat: selectedLocation.lat, lng: selectedLocation.lng },
+        map: map,
+        title: 'Hello World!'
+      });
+      return marker;
+    }
+  };
+
+  useEffect(() => {
+    setMapKey((prevKey) => prevKey + 1); // Update the key when selectedLocation changes
+  }, [selectedLocation]);
+  
+  
+
   return (
-    <div className="form-container-create">
+    <div className={styles.form_container_create}>
       <h2>Create a New Rack</h2>
-      <form className="item-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="image" className="label">
+      <form className={styles.item_form} onSubmit={handleSubmit}>
+        <div className={styles.form_group}>
+          <label htmlFor="image" className={styles.label}>
             Image URL
           </label>
           <input
@@ -75,16 +164,20 @@ const ItemCreate = () => {
             name="image"
             value={item.image}
             onChange={handleImageChange}
-            className="input"
+            className={styles.input}
           />
           {item.image && (
-            <div className="image-preview">
-              <img src={item.image} alt="Item Preview" className="preview" />
+            <div className={styles.image_preview}>
+              <img
+                src={item.image}
+                alt="Item Preview"
+                className={styles.preview}
+              />
             </div>
           )}
         </div>
-        <div className="form-group">
-          <label htmlFor="productName" className="label">
+        <div className={styles.form_group}>
+          <label htmlFor="productName" className={styles.label}>
             Rack Name
           </label>
           <input
@@ -93,11 +186,11 @@ const ItemCreate = () => {
             name="productName"
             value={item.productName}
             onChange={handleChange}
-            className="input"
+            className={styles.input}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="days" className="label">
+          <label htmlFor="days" className={styles.label}>
             Days
           </label>
           <input
@@ -106,11 +199,11 @@ const ItemCreate = () => {
             name="days"
             value={item.days}
             onChange={handleChange}
-            className="input"
+            className={styles.input}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="price" className="label">
+          <label htmlFor="price" className={styles.label}>
             Price
           </label>
           <input
@@ -119,11 +212,11 @@ const ItemCreate = () => {
             name="price"
             value={item.price}
             onChange={handleChange}
-            className="input"
+            className={styles.input}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="state" className="label">
+          <label htmlFor="state" className={styles.label}>
             State
           </label>
           <input
@@ -132,11 +225,11 @@ const ItemCreate = () => {
             name="state"
             value={item.state}
             onChange={handleChange}
-            className="input"
+            className={styles.input}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="city" className="label">
+          <label htmlFor="city" className={styles.label}>
             City
           </label>
           <input
@@ -145,15 +238,84 @@ const ItemCreate = () => {
             name="city"
             value={item.city}
             onChange={handleChange}
-            className="input"
+            className={styles.input}
           />
         </div>
-        <button type="submit" className="button">
-          Create Rack
-        </button>
+        <div className="form-group">
+          <label htmlFor="pincode" className={styles.label}>
+            Pincode
+          </label>
+          <input
+            type="text"
+            id="pincode"
+            name="pincode"
+            value={item.pincode}
+            onChange={handleChange}
+            className={styles.input}
+          />
+        </div>
+        {GmapKey && (
+          <div
+            className="form-group py-6"
+            style={{ width: "100%", height: "400px" }}
+          >
+            <label htmlFor="location" className={styles.label}>
+              Location
+            </label>
+            <GoogleMapReact
+            key={mapKey} // Set key to force re-render
+            onClick={handleMapClick}
+            bootstrapURLKeys={{ key: GmapKey.toString() }}
+            defaultCenter={defaultProps.center}
+            defaultZoom={defaultProps.zoom}
+            center={center}
+            zoom={zoom}
+            options={(maps) => {
+              return {
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                  style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                  position: maps.ControlPosition.BOTTOM_CENTER,
+                  mapTypeIds: [
+                    maps.MapTypeId.ROADMAP,
+                    maps.MapTypeId.SATELLITE,
+                    maps.MapTypeId.HYBRID,
+                  ],
+                },
+                zoomControl: true,
+                clickableIcons: false,
+              };
+            }}
+            yesIWantToUseGoogleMapApiInternals
+            onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
+          />
+
+          </div>
+        )}
+
+        <div className="pt-4">
+          <button type="submit" className={styles.button}>
+            Create Rack
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
+
+const Marker = ({ text }) => (
+  <div style={{ position: 'absolute', transform: 'translate(-50%, -50%)' }}>
+    <img src={marker} alt="Marker" style={{ width: '30px', height: '30px' }} />
+  </div>
+);
+
+
 export default ItemCreate;
+
+
+
+
+
+
+

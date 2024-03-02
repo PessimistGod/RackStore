@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 const User = require('../Models/User'); 
 
@@ -9,7 +10,7 @@ const jwt = require('jsonwebtoken');
 
 router.post('/signup', async (req, res) => {
   try {
-    const { name ,email, password } = req.body;
+    const { name ,email,gst, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -18,6 +19,7 @@ router.post('/signup', async (req, res) => {
     const newUser = new User({
       name,
       email,
+      gst,
       password: hashedPassword,
     });
 
@@ -55,6 +57,16 @@ router.post('/signup-admin', async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 });
+
+router.get("/mapper",async(req,res)=>{
+  try {
+    const response = await axios.get('https://locator-main.vercel.app/key');
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
+})
 
 router.get('/checkEmail', async(req, res)=>{
   const { email } = req.query;

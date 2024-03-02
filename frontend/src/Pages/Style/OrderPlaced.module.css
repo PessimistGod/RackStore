@@ -1,4 +1,5 @@
-.order-placed-container {
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap');
+.order_placed_container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,12 +8,12 @@
     text-align: center;
   }
   
-  .order-success {
-    background-color: #ffffff;
+  .order_success {
+    background-color: #bdbaba;
     color: #000000;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     margin: 20px;
     display: flex;
     flex-direction: column;
@@ -35,13 +36,33 @@
     font-size: 40px;
   }
   
-  .order-success h2 {
+  .order_success h2 {
     font-size: 24px;
     margin: 0;
+    font-family: "Gowun Batang", serif;
   }
   
-  .order-success p {
+  .order_success p {
     font-size: 18px;
     margin-top: 10px;
+    font-family: "Gowun Batang", serif;
   }
+  
+  .home_button {
+    font-family: "Gowun Batang", serif;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    /* color: #86be0d; */
+    text-decoration: none; 
+    transition: color 0.3s;
+  }
+  /* .home_button:hover {
+    color: #4CAF50;
+  } */
+
+  
+  
+
   

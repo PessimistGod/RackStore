@@ -1,4 +1,5 @@
-.home-container {
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap');
+.home_container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -19,15 +20,25 @@
     flex-direction: column;
 }
 
-.card img {
+/* .card img {
     max-width: 100%;
+    max-height: 100%;
     aspect-ratio: 3/2;
     object-fit: contain;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+} */
+.card img {
+    width: 100%; /* Ensures image fills the width of the card */
+    height: 100%; /* Ensures image fills the height of the card */
+    object-fit: cover; /* Ensures the image covers the entire area of the card */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    aspect-ratio: 3/2; /* Sets the aspect ratio to 3:2 */
 }
 
-.card-details {
+
+.card_details {
     padding: 10px;
     background-color: #f7f7f7;
     border-bottom-left-radius: 8px;
@@ -75,21 +86,32 @@
 
     .card img {
         height: auto;
+        width: auto;
     }
 }
 
-.card .btn-availability{
-    background-color: rgb(65, 204, 65);
+.card .btn_availability{
+    /* background-color: rgb(65, 204, 65);
+    background: linear-gradient(to right, rgb(0, 255, 0), 0%, rgb(65, 204, 65) 100%); */
+    background-color: green;
+    background: linear-gradient(to right, lightgreen 0%, green 100%);
+    font-weight: bolder;
     color: white;
     margin: 6px;
 }
-.card .btn-availability:hover{
-    background-color: rgb(0, 255, 0);
+.card .btn_availability:hover{
+    /* background-color: rgb(0, 255, 0);
+    background: linear-gradient(to right, rgb(65, 204, 65), 0%, rgb(0, 255, 0) 100%); */
+    background-color: lightgreen;
+    background: linear-gradient(to right, green 0%, lightgreen 100%);
 }
-.card .btn-delete-product{
+.card .btn_delete_product{
     background-color: rgb(199, 50, 50);
+    background: linear-gradient(to right, rgb(255, 0, 0) 0%, rgb(199, 50, 50) 100%);
+    font-weight: bolder;
 }
 
-.card .btn-delete-product:hover{
+.card .btn_delete_product:hover{
     background-color: rgb(255, 0, 0);
+    background: linear-gradient(to right, rgb(199, 50, 50) 0%, rgb(255, 0, 0) 100%);
 }

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { adminSignup } from './Validators/BackendInterface';
 import { handleEmail, handlePassword, handleConfirmPass } from './Validators/EmailAndPassword';
-import './Signup.css';
+// import './Signup.css';
+import styles from './AdminSignup.module.css';
 import { Link } from 'react-router-dom';
 import { useToast } from '../../Context/ToastContext';
-
 
 const AdminSignup = () => {
   const { showSuccessToast, showErrorToast } = useToast();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({  
     name: '',
     company: '',
     email: '',
@@ -90,21 +90,21 @@ const AdminSignup = () => {
       if (response) {
         // Signup successful
         setFormData({
-            name: '',
-            company: '',
-            email: '',
-            password: '',
-            confirmPass: '',
-          })
-          setValidation({
-            isValidEmail: false,
-            isValidPass: false,
-            isConfirmPass: false,
-            spanEmail: '',
-            spanPass: '',
-            spanCPass: '',
-          })
-          showSuccessToast('Signup successful')
+          name: '',
+          company: '',
+          email: '',
+          password: '',
+          confirmPass: '',
+        })
+        setValidation({
+          isValidEmail: false,
+          isValidPass: false,
+          isConfirmPass: false,
+          spanEmail: '',
+          spanPass: '',
+          spanCPass: '',
+        })
+        showSuccessToast('Signup successful')
       } else {
         // Error signing up
         showErrorToast('Check Credentials')
@@ -116,11 +116,14 @@ const AdminSignup = () => {
   };
 
   return (
-    <div className="signup-container">
-      <h2>Create Your Account</h2>
-      <form className='form-container-signup' onSubmit={handleSubmit}>
-        <div className="form-group-signup">
-          <label htmlFor="name">Full Name</label>
+    <div className={styles.signup_container}>
+      <h2>CREATE YOUR ACCOUNT</h2>
+      <form className={styles.form_container_signup} onSubmit={handleSubmit}>
+        <div className={styles.form_group_signup}>
+          <label htmlFor="name">USERNAME</label>
+          <div className={styles.inputContainer}>
+          <i class="fas fa-user"></i>
+
           <input
             type="text"
             id="name"
@@ -129,8 +132,13 @@ const AdminSignup = () => {
             onChange={handleChange}
           />
         </div>
-        <div className="form-group-signup">
-          <label htmlFor="email">Email address</label>
+        </div>
+
+        <div className={styles.form_group_signup}>
+          <label htmlFor="email">EMAIL </label>
+ <div className={styles.inputContainer}>
+          <i class="fas fa-envelope"></i>
+
           <input
             type="email"
             id="email"
@@ -141,10 +149,15 @@ const AdminSignup = () => {
               handleEmailValidation(e.target.value);
             }}
           />
-          {validation.spanEmail && <span className="error">{validation.spanEmail}</span>}
         </div>
-        <div className="form-group-signup">
-          <label htmlFor="password">Password</label>
+          {validation.spanEmail && <span className={styles.error}>{validation.spanEmail}</span>}
+        </div>
+
+        <div className={styles.form_group_signup}>
+          <label htmlFor="password">PASSWORD</label>
+          <div className={styles.inputContainer}>
+          <i class="fas fa-lock"></i>
+
           <input
             type="password"
             id="password"
@@ -155,10 +168,15 @@ const AdminSignup = () => {
               handlePasswordValidation(e.target.value);
             }}
           />
-          {validation.spanPass && <span className="error">{validation.spanPass}</span>}
         </div>
-        <div className="form-group-signup">
-          <label htmlFor="confirmPass">Confirm Password</label>
+          {validation.spanPass && <span className={styles.error}>{validation.spanPass}</span>}
+        </div>
+
+        <div className={styles.form_group_signup}>
+          <label htmlFor="confirmPass">CONFIRM PASSWORD</label>
+          <div className={styles.inputContainer}>
+          <i class="fas fa-lock"></i>
+
           <input
             type="password"
             id="confirmPass"
@@ -169,13 +187,15 @@ const AdminSignup = () => {
               handleConfirmPasswordValidation(e.target.value);
             }}
           />
-          {validation.spanCPass && <span className="error">{validation.spanCPass}</span>}
         </div>
-        <button type="submit" className="btn-signup">
-          Sign Up
+          {validation.spanCPass && <span className={styles.error}>{validation.spanCPass}</span>}
+        </div>
+
+        <button type="Submit" className={styles.btn_signup}>
+          SIGN UP
         </button>
 
-        <div className='flexCenter member-signup'>Already a Member? <Link className='link-signup-style' to={'/login'}>Login</Link></div>
+        <div className={styles.flexCenter_member_signup}>Already have a account? <Link className={styles.link_signup_style} to={'/login'}>Login</Link></div>
       </form>
     </div>
   );

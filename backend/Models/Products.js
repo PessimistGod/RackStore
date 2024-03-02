@@ -25,6 +25,14 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    pincode:{
+        type:String,
+        required:true,
+    },
+    latlng:{
+        type:Array,
+        required:false
+    },
     availability:{
         type:Boolean,
         default:true

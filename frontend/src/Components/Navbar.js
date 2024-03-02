@@ -7,6 +7,7 @@ import { CgProfile } from "react-icons/cg";
 const Navbar = () => {
   const [name, setName] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  
   const navigate = useNavigate();
 
 

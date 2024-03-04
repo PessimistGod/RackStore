@@ -13,9 +13,9 @@
 
 /* changes only h2 */
  h2 {
-    color: #5193f2;
+    color: #333;
     letter-spacing: 1px;
-    font-size: 35px;
+    font-size: 24px;
     /* padding: 0px; */
     text-transform: uppercase;
     display: inline-block;

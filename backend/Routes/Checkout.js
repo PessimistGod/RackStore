@@ -1,43 +1,54 @@
 const express = require("express");
-const Stripe = require("stripe");
-
-require("dotenv").config();
-
-const stripe = Stripe(process.env.STRIPE_KEY);
-
+const Razorpay = require("razorpay");
 const router = express.Router();
+const axios = require('axios')
+
+
+const razorInstance = new Razorpay({
+    key_id: process.env.RAZOR_KEY,
+    key_secret: process.env.RAZOR_SECRET
+});
 
 router.post("/checkout", async (req, res) => {
-    const { cartItems } = req.body;
+    const { subTotal } = req.body;
 
     try {
-        // Create line items for the checkout session
-        const lineItems = cartItems.map((cartItem) => {
-            return {
-                price_data: {
-                    currency: "inr", // Adjust currency based on your requirements
-                    product_data: {
-                        name: cartItem.productId.productName,
-                    },
-                    unit_amount: cartItem.productId.price * 100, // Convert price to cents
-                },
-                quantity: cartItem.quantity,
-            };
-        });
+        const options = {
+            amount: subTotal * 100,
+            currency: "INR",
+            receipt: "receipt#1",
+            payment_capture: 0, // 0 - to capture payment later, 1 - to capture payment instantly
+        };
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card"], // Adjust based on your requirements
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: `${process.env.CLIENT_URL}/order-placed`,
-            cancel_url: `${process.env.CLIENT_URL}/transaction-error`
+        razorInstance.orders.create(options, async function (err, order) {
+            if (err) {
+                return res.status(500).json({
+                    message: "Error creating Razorpay order"
+                });
+            }
+            return res.status(200).json(order);
         });
-
-        res.json({ url: session.url });
-    } catch (error) {
-        console.error("Error creating checkout session:", error);
-        res.status(500).json({ error: "Failed to create checkout session" });
+    } catch (err) {
+        return res.status(500).json({
+            message: "Error processing checkout"
+        });
     }
 });
+router.post("/capture/:paymentId", async (req, res) => {
+    const { subTotal } = req.body;
+    try {
+      const response = await axios.post(`https://${process.env.RAZOR_KEY}:${process.env.RAZOR_SECRET}@api.razorpay.com/v1/payments/${req.params.paymentId}/capture`, {
+        amount: subTotal * 100,
+        currency: "INR"
+      });
+  
+      return res.status(200).json(response.data);
+    } catch (err) {
+      return res.status(500).json({
+        message: err.message
+      });
+    }
+  });
+
 
 module.exports = router;

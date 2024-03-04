@@ -8,7 +8,7 @@ export const ToastProvider = ({ children }) => {
   const showSuccessToast = (message, options) => {
     toast.success(message, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 300,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -22,7 +22,7 @@ export const ToastProvider = ({ children }) => {
   const showErrorToast = (message, options) => {
     toast.error(message, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 300,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -37,7 +37,7 @@ export const ToastProvider = ({ children }) => {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={300}
         limit={1}
         hideProgressBar={false}
         newestOnTop={false}

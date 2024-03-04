@@ -23,6 +23,18 @@ export async function adminSignup(userData) {
     throw error;
   }
 }
+
+export async function merchantSignup(userData) {
+  try {
+    const response = await axios.post(`${API_URL}/api/auth/signup-merchant`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error signing up user:', error);
+    throw error;
+  }
+}
+
+
 export async function loginUser(userData){
     try {
         const response = await axios.post(`${API_URL}/api/auth/login`, userData);

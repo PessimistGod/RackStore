@@ -3,7 +3,6 @@ import './EmailAndPassword.css'
 
 
 const API_URL = process.env.REACT_APP_API_URL;
-console.log(API_URL)
 
 export async function checkEmailExist(email) {
   try {

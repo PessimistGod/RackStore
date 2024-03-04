@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './DisplayOrders.module.css';
+import styles from './MerchantOrder.module.css';
 
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../Context/ToastContext';
 
 
-const DisplayOrders = () => {
+const MerchantOrders = () => {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState({});
   const [loading, setLoading] = useState(false);
@@ -16,11 +16,21 @@ const DisplayOrders = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/orders/get-orders`);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.isMerchant) {
+        const response = await axios.get(`${API_URL}/api/orders/get-orders/${decodedToken.id}`);
+        
         setOrders(response.data);
+
         const productIds = [...new Set(response.data.flatMap(order => order.cartItems.map(item => item.productId)))];
 
         const productDetails = {};
@@ -29,20 +39,24 @@ const DisplayOrders = () => {
           productDetails[productId] = productResponse.data;
         }
         setProducts(productDetails);
-      } catch (error) {
-        showErrorToast('Server Busy')
-        console.error('Error fetching data:', error);
+      } else {
+        navigate('/login');
       }
-    };
+    } catch (error) {
+      showErrorToast('Server Busy')
+      console.error('Error fetching data:', error);
+    }
+  };
 
-    fetchData();
-  }, [API_URL, showErrorToast]);
+  fetchData();
+}, [API_URL, showErrorToast, navigate]);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      if (!decodedToken.isAdmin) {
+      if (!decodedToken.isMerchant) {
         navigate('/login')
       }
     }
@@ -52,7 +66,7 @@ const DisplayOrders = () => {
     try {
       setLoading(true);
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       await axios.delete(`${API_URL}/api/orders/delete-order/${orderId}`);
 
@@ -106,7 +120,9 @@ const DisplayOrders = () => {
                    <div className={styles.product_days}>
                      Days: {products[item.productId]?.days || 'N/A'}
                    </div>
-
+                   <div className={styles.product_days}>
+                     Qty: {order.cartItems[0]?.quantity || '1'}
+                   </div>
               </div>
             </div>
           ))}
@@ -124,4 +140,4 @@ const DisplayOrders = () => {
   );
 };
 
-export default DisplayOrders;
+export default MerchantOrders;

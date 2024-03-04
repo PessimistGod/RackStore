@@ -10,16 +10,16 @@ const jwt = require('jsonwebtoken');
 
 router.post('/signup', async (req, res) => {
   try {
-    const { name ,email,gst, password } = req.body;
+    const { name ,email ,gst ,password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    let GST = gst.toUpperCase()
 
-    console.log('Hashed password:', hashedPassword);
 
     const newUser = new User({
       name,
       email,
-      gst,
+      gst:GST,
       password: hashedPassword,
     });
 
@@ -46,6 +46,35 @@ router.post('/signup-admin', async (req, res) => {
       email,
       password: hashedPassword,
       isAdmin:true,
+    });
+
+
+    await newUser.save();
+
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
+router.post('/signup-merchant', async (req, res) => {
+  try {
+    const { name ,email ,gst ,password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let GST = gst.toUpperCase()
+
+    console.log('Hashed password:', hashedPassword);
+
+    const newUser = new User({
+      name,
+      email,
+      gst:GST,
+      password: hashedPassword,
+      isMerchant:true,
     });
 
 
@@ -101,7 +130,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email, name:user.name, isAdmin:user.isAdmin}, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id, email: user.email, name:user.name, isAdmin:user.isAdmin, isMerchant:user.isMerchant}, process.env.JWT_SECRET);
     return res.status(200).json({ token });
   } catch (error) {
     console.error('Error during login:', error);

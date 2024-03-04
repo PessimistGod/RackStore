@@ -7,12 +7,12 @@ import axios from "axios";
 import { useToast } from "../../Context/ToastContext";
 import GoogleMapReact from "google-map-react";
 
-import marker from "../../Assets/marker.png";
 
 const ItemCreate = () => {
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
   const { showSuccessToast, showErrorToast } = useToast();
+  const [uid, setUid] = useState(null)
 
   const [GmapKey, setGmapKey] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -57,9 +57,13 @@ const ItemCreate = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
-      if (!decodedToken.isAdmin) {
+      if (!decodedToken.isMerchant) {
         navigate("/login");
+      }else{
+        setUid(decodedToken.id)
       }
+    }else{
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -74,13 +78,13 @@ const ItemCreate = () => {
     };
 
     fetchData();
-  }, []);
+  }, [API_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const productData = { ...item, userId: uid };
     try {
-      const response = await axios.post(`${API_URL}/api/prod/products`, item);
+      const response = await axios.post(`${API_URL}/api/prod/products`, productData);
       if (response) {
         setItem({
           productName: "",
@@ -122,6 +126,7 @@ const ItemCreate = () => {
     if (item?.pincode?.length === 6) {
       fetchLatlongByPincode();
     }
+    // eslint-disable-next-line
   }, [item.pincode, GmapKey]);
 
   const handleMapClick = ({ lat, lng }) => {
@@ -304,11 +309,7 @@ const ItemCreate = () => {
 };
 
 
-const Marker = ({ text }) => (
-  <div style={{ position: 'absolute', transform: 'translate(-50%, -50%)' }}>
-    <img src={marker} alt="Marker" style={{ width: '30px', height: '30px' }} />
-  </div>
-);
+
 
 
 export default ItemCreate;

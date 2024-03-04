@@ -6,12 +6,17 @@ import LoginSignup from './Pages/Authentication/Login';
 import Signup from './Pages/Authentication/LoginSignup';
 import Cart from './Pages/Cart';
 import OrderPlaced from './Pages/OrderPlaced';
-import ItemCreate from './Pages/Admin/ItemCreate';
-import DisplayOrders from './Pages/Admin/DisplayOrders';
 import AdminSignup from './Pages/Authentication/AdminSignup';
-import ManageRack from './Pages/Admin/ManageRack';
 import History from './Pages/History';
 import ErrorTransaction from './Pages/ErrorTransaction';
+import MerchantSignup from './Pages/Authentication/MerchantSignup';
+import MerchantOrders from './Pages/Merchant/MerchantOrders';
+import ItemCreate from './Pages/Merchant/ItemCreate';
+import ManageMerchantRack from './Pages/Merchant/ManageMerchantRack';
+import ManageRack from './Pages/Admin/ManageRack';
+import MerchantList from './Pages/Admin/MerchantList';
+import UsersList from './Pages/Admin/UsersList';
+import AdminHome from './Pages/Admin/AdminHome';
 
 function App() {
   return (
@@ -26,10 +31,22 @@ function App() {
 
             <Route path="/login" element={<LoginSignup />}/>
             <Route path="/signup" element={<Signup />}/>
-            <Route path="/admin-create" element={<ItemCreate />}/>
-            <Route path="/admin-orders" element={<DisplayOrders />}/>
-            <Route path="/admin-signup" element={<AdminSignup />}/>
+
+            <Route path="/merchant-signup" element={<MerchantSignup />}/>
+            <Route path="/merchant-orders" element={<MerchantOrders />}/>
+            <Route path="/merchant-create" element={<ItemCreate />}/>
+            <Route path="/merchant-manage" element={<ManageMerchantRack />}/>
+
+
+
+            {/* <Route path="/admin-orders" element={<DisplayOrders />}/> */}
+            <Route path="/admin-home" element={<AdminHome />}/>
             <Route path="/admin-manage" element={<ManageRack />}/>
+            <Route path="/merchants-list" element={<MerchantList />}/>
+            <Route path="/users-list" element={<UsersList />}/>
+
+            <Route path="/admin-signup" element={<AdminSignup />}/>
+
             <Route path="/history" element={<History />}/>
 
 

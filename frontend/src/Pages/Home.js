@@ -16,6 +16,7 @@ const Home = () => {
   const [GmapKey, setGmapKey] = useState("");
   const { showSuccessToast, showErrorToast } = useToast();
   const [openInfoWindow, setOpenInfoWindow] = useState(null);
+  const [isMerchantOrAdmin, setIsMerchantOrAdmin] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,7 +28,7 @@ const Home = () => {
 
       const decodedToken = jwtDecode(storedToken);
       setUserId(decodedToken?.id);
-
+      setIsMerchantOrAdmin(decodedToken?.isAdmin || decodedToken?.isMerchant)
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/prod/products`);
         setProducts(response.data);
@@ -107,16 +108,20 @@ const Home = () => {
       });
   
       const contentString = product ? `
-        <div class="${styles.card}">
-          <img src="${product.image}" alt="${product.name}" />
-          <div class="${styles.card_details}">
-            <h3>${product.productName}</h3>
-            <p>Price: ₹${product.price}</p>
-            <p>Days: ${product.days}</p>
-            <p>Location: ${product.city}, ${product.state}</p>
-          </div>
+      <div class="max-w-xs bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="relative">
+          <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover object-center" />
         </div>
-      ` : "";
+        <div class="p-4">
+          <h3 class="text-lg font-semibold mb-2">${product.productName}</h3>
+          <p class="text-gray-600 mb-2">Price: ₹${product.price}</p>
+          <p class="text-gray-600 mb-2">Days: ${product.days}</p>
+          <p class="text-gray-600 mb-2">Location: ${product.city}, ${product.state}</p>
+        </div>
+      </div>
+    ` : "";
+    
+    
   
       const infowindow = new maps.InfoWindow({
         content: contentString,
@@ -176,16 +181,19 @@ const Home = () => {
                 <p>
                   Location: {product.city}, {product.state} <br /> {product.pincode}
                 </p>
-                <button onClick={() => handleAddToCart(product._id)}>
+                {!isMerchantOrAdmin &&
+
+                  <button onClick={() => handleAddToCart(product._id)}>
                   Purchase Rack
                 </button>
+                }
               </div>
             </div>
           ))}
       </div>
 
       {GmapKey && (
-        <div style={{ height: "100vh", width: "100%" }}>
+        <div style={{ height: "100vh", width: "75%",margin: '200px auto' }}>
           <GoogleMapReact
             bootstrapURLKeys={{
               key: GmapKey.toString(),
@@ -207,8 +215,8 @@ const Home = () => {
                 clickableIcons: false,
               };
             }}
-            defaultCenter={{ lat: 20, lng: 0 }}
-            defaultZoom={3}
+            defaultCenter={{ lat: 20.5937, lng: 78.9629 }}
+            defaultZoom={4.5}
             onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
           />
         </div>

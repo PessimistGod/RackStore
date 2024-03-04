@@ -35,22 +35,66 @@ router.get('/get-orders', async (req, res) => {
   });
 
 
-  router.delete('/delete-order/:orderId', async (req, res) => {
+  router.get('/get-orders/:userId', async (req, res) => {
     try {
-      const orderId = req.params.orderId;
-  
-      const deletedOrder = await Order.findByIdAndDelete(orderId);
-  
-      if (!deletedOrder) {
-        return res.status(404).json({ error: 'Order not found' });
-      }
-  
-      res.json({ message: 'Order successfully Delivered' });
+        const userId = req.params.userId;
+
+        const orders = await Order.find(); // Fetch orders
+        const productIds = orders.map(order => order.cartItems.map(item => item.productId)); // Extract productIds
+        
+
+        const productDetails = await Product.find({ _id: { $in: productIds.flat() } });
+        
+
+        const updatedOrders = orders.map(order => {
+            const updatedCartItems = order.cartItems.map(item => {
+                const productDetail = productDetails.find(product => product._id.toString() === item.productId.toString());
+                return {
+                    ...item.toObject(),
+                    product: productDetail
+                };
+            });
+            return {
+                ...order.toObject(),
+                cartItems: updatedCartItems
+            };
+        });
+        
+        const filteredOrders = updatedOrders.filter(order => {
+          if (order.cartItems.length > 0 && order.cartItems[0].product && order.cartItems[0].product.userId) {
+              return order.cartItems[0].product.userId.toString() === userId.toString();
+          }
+          return false;
+      });
+    
+        
+        res.status(200).json(filteredOrders);
     } catch (error) {
-      console.error('Error deleting order:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
+
+
+
+
+router.delete('/delete-order/:orderId', async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json({ message: 'Order successfully Delivered' });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
   router.post('/set-order-history', async (req, res) => {
     try {

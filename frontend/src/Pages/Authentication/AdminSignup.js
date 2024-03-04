@@ -117,12 +117,12 @@ const AdminSignup = () => {
 
   return (
     <div className={styles.signup_container}>
-      <h2>CREATE YOUR ACCOUNT</h2>
+      <h2>CREATE ADMIN ACCOUNT</h2>
       <form className={styles.form_container_signup} onSubmit={handleSubmit}>
         <div className={styles.form_group_signup}>
           <label htmlFor="name">USERNAME</label>
           <div className={styles.inputContainer}>
-          <i class="fas fa-user"></i>
+          <i className="fas fa-user"></i>
 
           <input
             type="text"
@@ -137,7 +137,7 @@ const AdminSignup = () => {
         <div className={styles.form_group_signup}>
           <label htmlFor="email">EMAIL </label>
  <div className={styles.inputContainer}>
-          <i class="fas fa-envelope"></i>
+          <i className="fas fa-envelope"></i>
 
           <input
             type="email"
@@ -156,7 +156,7 @@ const AdminSignup = () => {
         <div className={styles.form_group_signup}>
           <label htmlFor="password">PASSWORD</label>
           <div className={styles.inputContainer}>
-          <i class="fas fa-lock"></i>
+          <i className="fas fa-lock"></i>
 
           <input
             type="password"
@@ -175,7 +175,7 @@ const AdminSignup = () => {
         <div className={styles.form_group_signup}>
           <label htmlFor="confirmPass">CONFIRM PASSWORD</label>
           <div className={styles.inputContainer}>
-          <i class="fas fa-lock"></i>
+          <i className="fas fa-lock"></i>
 
           <input
             type="password"

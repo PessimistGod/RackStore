@@ -7,6 +7,8 @@ import { CgProfile } from "react-icons/cg";
 const Navbar = () => {
   const [name, setName] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMerchant, setIsMerchant] = useState(false);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
   const navigate = useNavigate();
@@ -16,13 +18,15 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogout = useCallback(() => {
-    localStorage.removeItem("token");
-    setName(null);
-    setTimeout(() => {
-      navigate("/login");
-    }, 800);
+  const handleLogout = useCallback(async () => {
+    await localStorage.removeItem("token");
+    await setName(null);
+    await setIsAdmin(false)
+    await setIsMerchant(false)
+    await new Promise(resolve => setTimeout(resolve, 200)); // Delay the navigation using a promise
+    navigate("/login");
   }, [navigate]);
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,10 +34,11 @@ const Navbar = () => {
       const decodedToken = jwtDecode(token);
       setName(decodedToken.name);
       setIsAdmin(decodedToken.isAdmin);
+      setIsMerchant(decodedToken.isMerchant)
     } else {
       setName(null);
     }
-  }, [navigate, handleLogout]);
+  }, [navigate]);
 
 
   return (
@@ -64,9 +69,9 @@ const Navbar = () => {
                 <li>
                   <Link
                     className="text-sm text-gray-500 hover:text-gray-700"
-                    to={"/admin-orders"}
+                    to={"/admin-home"}
                   >
-                    Orders
+                    Home
                   </Link>
                 </li>
                 <li className="text-gray-300">
@@ -89,9 +94,34 @@ const Navbar = () => {
                 <li>
                   <Link
                     className="text-sm text-gray-500 hover:text-gray-700"
-                    to={"/admin-create"}
+                    to={"/users-list"}
                   >
-                    Create
+                    Users
+                  </Link>
+                </li>
+                <li className="text-gray-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-4 h-4 current-fill"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                    />
+                  </svg>
+                </li>
+
+                <li>
+                  <Link
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                    to={"/merchants-list"}
+                  >
+                    Merchants
                   </Link>
                 </li>
                 <li className="text-gray-300">
@@ -121,7 +151,70 @@ const Navbar = () => {
                 </li>
               </>
             )}
-            {!isAdmin && name && (
+
+{isMerchant && (
+              <>
+                <li>
+                  <Link
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                    to={"/merchant-orders"}
+                  >
+                    Orders
+                  </Link>
+                </li>
+                <li className="text-gray-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-4 h-4 current-fill"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                    />
+                  </svg>
+                </li>
+
+                <li>
+                  <Link
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                    to={"/merchant-create"}
+                  >
+                    Create
+                  </Link>
+                </li>
+                <li className="text-gray-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-4 h-4 current-fill"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                    />
+                  </svg>
+                </li>
+
+                <li>
+                  <Link
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                    to={"/merchant-manage"}
+                  >
+                    Manage
+                  </Link>
+                </li>
+              </>
+            )}
+            {!isAdmin && !isMerchant && name && (
               <>
                 <li>
                   <Link
@@ -184,7 +277,7 @@ const Navbar = () => {
               </>
             )}
           </ul>
-          {!(isAdmin || name) && (
+          {!(isAdmin || isMerchant || name) && (
             <>
               <Link
                 className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold  rounded-xl transition duration-200"
@@ -194,7 +287,7 @@ const Navbar = () => {
               </Link>
               <Link
                 className="hidden lg:inline-block py-2 px-6 bg-green-500 hover:bg-green-600 text-sm lg:mr-3 text-white font-bold rounded-xl transition duration-200"
-                to={"/signup"}
+                to={"/merchant-signup"}
               >
                 Merchant SignUp
               </Link>
@@ -206,7 +299,7 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          {(isAdmin || name) && (
+          {(isAdmin || isMerchant || name) && (
             <>
               <Link
                 className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-3 text-sm text-gray-600 hover:text-gray-900 font-bold  rounded-xl transition duration-200"
@@ -256,18 +349,27 @@ const Navbar = () => {
                     <li className="mb-1">
                       <Link
                         className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
-                        to={"/admin-orders"}
+                        to={"/admin-home"}
                       >
-                        Orders
+                        Home
                       </Link>
                     </li>
 
                     <li className="mb-1">
                       <Link
                         className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
-                        to={"/admin-create"}
+                        to={"/users-list"}
                       >
-                        Create
+                        Users
+                      </Link>
+                    </li>
+
+                    <li className="mb-1">
+                      <Link
+                        className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
+                        to={"/merchants-list"}
+                      >
+                        Merchants
                       </Link>
                     </li>
 
@@ -281,7 +383,37 @@ const Navbar = () => {
                     </li>
                   </>
                 )}
-                {!isAdmin && name && (
+                {isMerchant && (
+                  <>
+                    <li className="mb-1">
+                      <Link
+                        className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
+                        to={"/merchant-orders"}
+                      >
+                        Orders
+                      </Link>
+                    </li>
+
+                    <li className="mb-1">
+                      <Link
+                        className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
+                        to={"/merchant-create"}
+                      >
+                        Create
+                      </Link>
+                    </li>
+
+                    <li className="mb-1">
+                      <Link
+                        className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
+                        to={"/merchant-manage"}
+                      >
+                        Manage
+                      </Link>
+                    </li>
+                  </>
+                )}
+                {!isAdmin && !isMerchant && name && (
                   <>
                     <li className="mb-1">
                       <Link
@@ -316,7 +448,7 @@ const Navbar = () => {
             </div>
             <div className="mt-auto">
               <div className="pt-6">
-                {!(isAdmin || name) && (
+                {!(isAdmin || isMerchant || name) && (
                   <>
                     <Link
                       className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none bg-gray-50 hover:bg-gray-100 rounded-xl"
@@ -326,7 +458,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                       className="block px-4 py-3 mb-2 leading-loose text-xs text-center text-white font-semibold bg-green-600 hover:bg-green-700  rounded-xl"
-                      to={"/signup"}
+                      to={"/merchant-signup"}
                     >
                       Merchant SignUp
                     </Link>
@@ -338,7 +470,7 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
-                {(isAdmin || name) && (
+                {(isAdmin || isMerchant || name) && (
                   <>
                     <Link
                       className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none bg-gray-50 hover:bg-gray-100 rounded-xl"

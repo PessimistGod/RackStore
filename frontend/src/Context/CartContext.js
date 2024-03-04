@@ -10,12 +10,16 @@ export const CartProvider = ({ children }) => {
   const fetchCartItemCount = async () => {
     try {
       const token = localStorage.getItem('token');
-      const decodeToken = jwtDecode(token);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/cart/count/${decodeToken.id}`);
-      const data = await response.json();
-      const totalCount = data.totalCount || 0;
-      setCartCount(totalCount);
+      if(token){
+
+        const decodeToken = jwtDecode(token);
+        
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/cart/count/${decodeToken.id}`);
+        const data = await response.json();
+        const totalCount = data?.totalCount || 0;
+        setCartCount(totalCount);
+      }
     } catch (error) {
       console.error('Error fetching cart items count:', error);
     }

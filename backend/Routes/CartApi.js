@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Cart = require('../Models/Cart');
+const History = require('../Models/History');
+const Orders = require('../Models/Orders')
+const Product = require('../Models/Products');
 
 // Route to add a product to the cart
 router.post('/add-to-cart', async (req, res) => {
@@ -141,6 +144,38 @@ router.get('/count/:userId', async (req, res) => {
   router.post('/clear/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
+
+        const cartItems = await Cart.find({ userId: userId });
+
+
+        await Promise.all(cartItems.map(async (cartItem) => {
+            // Create a new order for the current cart item
+            await Orders.create({
+                userDetails: req.body.userDetails,
+                cartItems: [cartItem], // Create an array with a single cart item
+                userId: userId,
+            });
+
+            // Set product availability to false
+            const productId = cartItem.productId;
+            await Product.findByIdAndUpdate(productId, { availability: false });
+        }));
+
+
+
+        await History.create({
+            userDetails: req.body.userDetails,
+            cartItems: cartItems,
+            userId: userId,
+        });
+
+
+
+        await Promise.all(cartItems.map(async (cartItem) => {
+            const productId = cartItem.productId;
+            await Product.findByIdAndUpdate(productId, { availability: false });
+        }));
+
 
         await Cart.deleteMany({ userId: userId });
 

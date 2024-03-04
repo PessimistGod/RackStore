@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import styles from './Style/History.module.css';
 
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
@@ -48,43 +49,43 @@ const History = () => {
   };
 
   return (
-    <div className='order-list'>
-      <h2>Purchase History</h2>
+    <div className={styles.order_list}>
+      <h2 className='flex justify-center items-center ml-0'>Purchase History</h2>
       {historyData.map((order) => (
-        <div className="order-card" key={order._id}>
+        <div className={styles.order_card} key={order._id}>
           {order.cartItems.map((item, index) => (
-            <div className="product-details" key={index}>
-              <div className="product-image">
+            <div className={styles.product_details} key={index}>
+              <div className={styles.product_image}>
                 <img src={products[item.productId]?.image} alt="Product" />
               </div>
-              <div className="order-details">
-                <div className="order-id">
-                  Order ID: {order._id}
+              <div className={styles.order_details}>
+                <div className={styles.order_id}>
+                  Order ID: {order.userDetails[0]?.id}
                 </div>
                 <div className="order-date">
                   Order Date: {formatDate(order.createdAt)}
                 </div>
-                <div className="customer-details">
-                  <div className="customer-name">
-                    Name: {order.userDetails[0]?.name}
+                <div className={styles.customer_details}>
+                  <div className={styles.customer_name}>
+                    Name: {order.userDetails[0]?.notes?.name}
                   </div>
-                  <div className="customer-email">
+                  <div className={styles.customer_email}>
                     Email: {order.userDetails[0]?.email}
                   </div>
-                  <div className="customer-phone">
-                    Phone: {order.userDetails[0]?.phoneNumber}
+                  <div className={styles.customer_phone}>
+                    Phone: {order.userDetails[0]?.contact}
                   </div>
-                  <div className="customer-address">
-                    Address: {order.userDetails[0]?.address}
+                  <div className={styles.customer_address}>
+                    Address: {order.userDetails[0]?.notes?.address}
                   </div>
                 </div>
-                <div className="product-name">
+                <div className={styles.product_name}>
                   Product Name: {products[item.productId]?.productName || 'Product Not Found'}
                 </div>
-                <div className="product-price">
+                <div className={styles.product_price}>
                   Price: ₹{products[item.productId]?.price || 'N/A'}
                 </div>
-                <div className="product-quantity">
+                <div  className={styles.product_days}>
                   Quantity: {item.quantity || 0}
                 </div>
               </div>

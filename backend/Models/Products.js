@@ -36,8 +36,13 @@ const productSchema = new mongoose.Schema({
     availability:{
         type:Boolean,
         default:true
-    }
-
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserDetails',
+        required: true,
+    },
+    
 },{timestamps:true})
 
 

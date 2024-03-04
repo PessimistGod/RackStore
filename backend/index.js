@@ -8,6 +8,7 @@ const cartList = require('./Routes/CartApi')
 const product = require('./Routes/ProductApi')
 const orders = require('./Routes/Orders')
 const checkout = require('./Routes/Checkout')
+const users = require('./Routes/Users')
 
 
 const app = express();
@@ -32,7 +33,9 @@ app.use('/api/auth', authenticate);
 app.use('/api/prod', product);
 app.use('/api/cart', cartList);
 app.use('/api/orders', orders);
-app.use('/api/stripe', checkout);
+app.use('/api/razorpay', checkout);
+app.use('/api/user', users);
+
 
 
 

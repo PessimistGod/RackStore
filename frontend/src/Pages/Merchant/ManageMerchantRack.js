@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useToast } from '../../Context/ToastContext';
-import styles from './ManageRack.module.css';
+import styles from './ManageMerchantRack.module.css';
 
-const ManageRack = () => {
+const ManageMerchantRack = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [userId, setUserId] = useState(null)
   const API_URL = process.env.REACT_APP_API_URL;
   const { showSuccessToast, showErrorToast } = useToast();
 
@@ -15,9 +16,12 @@ const ManageRack = () => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      if (!decodedToken.isAdmin) {
+      setUserId(decodedToken?.id)
+      if (!decodedToken.isMerchant) {
         navigate('/login');
       }
+    }else{
+        navigate('/login');
     }
   }, [navigate]);
 
@@ -30,21 +34,23 @@ const ManageRack = () => {
       }
       try {
         const response = await axios.get(`${API_URL}/api/prod/products`);
-        setProducts(response.data);
+        const userProducts = response.data.filter(product => product.userId === userId);
+        setProducts(userProducts);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchData();
-  }, [navigate, API_URL]);
+  }, [navigate, userId, API_URL]);
 
 
   const handleAvailability = async (productId, availability) => {
     try {
       await axios.put(`${API_URL}/api/prod/products/${productId}`, { availability });
       const response = await axios.get(`${API_URL}/api/prod/products`);
-      setProducts(response.data);
+      const userProducts = response.data.filter(product => product.userId === userId);
+      setProducts(userProducts);
       showSuccessToast('Changed Availability Setting')
     } catch (error) {
         showErrorToast("Error Fetching Try Later")
@@ -55,9 +61,9 @@ const ManageRack = () => {
   const handleDelete = async (productId) => {
     try {
       await axios.delete(`${API_URL}/api/prod/products/${productId}`);
-      // Fetch updated products after deletion
       const response = await axios.get(`${API_URL}/api/prod/products`);
-      setProducts(response.data);
+      const userProducts = response.data.filter(product => product.userId === userId);
+      setProducts(userProducts);
       showSuccessToast('Product Deleted')
     } catch (error) {
         showErrorToast("Error Fetching Try Later")
@@ -90,4 +96,4 @@ const ManageRack = () => {
   );
 };
 
-export default ManageRack;
+export default ManageMerchantRack;

@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { signUpUser } from './Validators/BackendInterface';
+import { merchantSignup } from './Validators/BackendInterface';
 import { handleEmail, handlePassword, handleConfirmPass } from './Validators/EmailAndPassword';
-// import './Signup.css';
-import styles from './LoginSignup.module.css';
+import styles from './MerchantSignup.module.css';
 import { Link } from 'react-router-dom';
 import { useToast } from '../../Context/ToastContext';
 
-const LoginSignup = () => {
+const MerchantSignup = () => {
   const { showSuccessToast, showErrorToast } = useToast();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({  
     name: '',
     company: '',
     email: '',
     gst:'',
     password: '',
     confirmPass: '',
-
   });
 
   const [validation, setValidation] = useState({
@@ -88,42 +86,39 @@ const LoginSignup = () => {
     const { isValidEmail, isValidPass, isConfirmPass } = validation;
 
     if (isValidEmail && isValidPass && isConfirmPass) {
-      const response = await signUpUser(formData);
+      const response = await merchantSignup(formData);
       if (response) {
         // Signup successful
         setFormData({
-            name: '',
-            company: '',
-            email: '',
-            gst:'',
-            password: '',
-            confirmPass: '',
-          })
-          setValidation({
-            isValidEmail: false,
-            isValidPass: false,
-            isConfirmPass: false,
-            spanEmail: '',
-            spanPass: '',
-            spanCPass: '',
-          })
-          setTimeout(() => {
-            showSuccessToast('Signup Success')
-          }, 600);
+          name: '',
+          company: '',
+          email: '',
+          gst:'',
+          password: '',
+          confirmPass: '',
+        })
+        setValidation({
+          isValidEmail: false,
+          isValidPass: false,
+          isConfirmPass: false,
+          spanEmail: '',
+          spanPass: '',
+          spanCPass: '',
+        })
+        showSuccessToast('Signup successful')
       } else {
-        
-        showErrorToast('Error signing up')
+        // Error signing up
+        showErrorToast('Check Credentials')
       }
     } else {
       // Form validation failed
       showErrorToast('Form validation failed')
-
     }
   };
 
   return (
     <div className={styles.signup_container}>
-      <h2>CREATE YOUR ACCOUNT</h2>
+      <h2>CREATE MERCHANT ACCOUNT</h2>
       <form className={styles.form_container_signup} onSubmit={handleSubmit}>
         <div className={styles.form_group_signup}>
           <label htmlFor="name">USERNAME</label>
@@ -139,6 +134,8 @@ const LoginSignup = () => {
           />
         </div>
         </div>
+
+        
 
         <div className={styles.form_group_signup}>
           <label htmlFor="email">EMAIL </label>
@@ -159,7 +156,7 @@ const LoginSignup = () => {
           {validation.spanEmail && <span className={styles.error}>{validation.spanEmail}</span>}
         </div>
 
-      
+
         <div className={styles.form_group_signup}>
           <label htmlFor="gst">GST Number </label>
  <div className={styles.inputContainer}>
@@ -176,7 +173,7 @@ const LoginSignup = () => {
           />
           </div>
           </div>
-      
+
         <div className={styles.form_group_signup}>
           <label htmlFor="password">PASSWORD</label>
           <div className={styles.inputContainer}>
@@ -225,5 +222,4 @@ const LoginSignup = () => {
   );
 };
 
-
-export default LoginSignup;
+export default MerchantSignup;

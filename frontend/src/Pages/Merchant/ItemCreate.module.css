@@ -6,9 +6,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     text-align: center;
-    margin-top: 20rem;
+    margin-top: 4rem;
 }
 
 /* changes only h2 */
@@ -41,6 +40,7 @@
     font-size: 18px;
     font-weight: bold;
     color: #555;
+    margin: 4px 0;
     text-align: left; /* Left-align the label text */
 }
 
@@ -48,6 +48,7 @@
   .input {
     width: 100%;
     padding: 12px;
+    margin: 4px 0;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -62,7 +63,10 @@
 .input:focus {
     transform: scale(1.03);
     padding: 15px 30px 15px 15px;
-    border: 3px solid #5193f2;   
+    border: 3px solid #000000;   
+    
+    background-color: #f4f2f2;
+
 }
 
 /* Image preview */

@@ -7,12 +7,11 @@ import axios from "axios";
 import { useToast } from "../../Context/ToastContext";
 import GoogleMapReact from "google-map-react";
 
-
 const ItemCreate = () => {
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
   const { showSuccessToast, showErrorToast } = useToast();
-  const [uid, setUid] = useState(null)
+  const [uid, setUid] = useState(null);
 
   const [GmapKey, setGmapKey] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -38,6 +37,7 @@ const ItemCreate = () => {
     image: "",
     state: "",
     pincode: "",
+    details:"",
     lati: "",
     longi: "",
     city: "",
@@ -59,10 +59,10 @@ const ItemCreate = () => {
       const decodedToken = jwtDecode(token);
       if (!decodedToken.isMerchant) {
         navigate("/login");
-      }else{
-        setUid(decodedToken.id)
+      } else {
+        setUid(decodedToken.id);
       }
-    }else{
+    } else {
       navigate("/login");
     }
   }, [navigate]);
@@ -84,7 +84,10 @@ const ItemCreate = () => {
     e.preventDefault();
     const productData = { ...item, userId: uid };
     try {
-      const response = await axios.post(`${API_URL}/api/prod/products`, productData);
+      const response = await axios.post(
+        `${API_URL}/api/prod/products`,
+        productData
+      );
       if (response) {
         setItem({
           productName: "",
@@ -93,13 +96,14 @@ const ItemCreate = () => {
           image: "",
           state: "",
           pincode: "",
+          details:"",
           lati: "",
           longi: "",
           city: "",
         });
-        setSelectedLocation(null)
-        setCenter(defaultProps?.center)
-        setZoom(defaultProps?.zoom)
+        setSelectedLocation(null);
+        setCenter(defaultProps?.center);
+        setZoom(defaultProps?.zoom);
       }
       showSuccessToast("Rack Added Successfully");
     } catch (error) {
@@ -136,14 +140,12 @@ const ItemCreate = () => {
     setItem({ ...item, lati: lat, longi: lng });
   };
 
-
-
   const renderMarkers = (map, maps) => {
     if (selectedLocation) {
       let marker = new maps.Marker({
         position: { lat: selectedLocation.lat, lng: selectedLocation.lng },
         map: map,
-        title: 'Hello World!'
+        title: "",
       });
       return marker;
     }
@@ -152,8 +154,6 @@ const ItemCreate = () => {
   useEffect(() => {
     setMapKey((prevKey) => prevKey + 1); // Update the key when selectedLocation changes
   }, [selectedLocation]);
-  
-  
 
   return (
     <div className={styles.form_container_create}>
@@ -259,6 +259,24 @@ const ItemCreate = () => {
             className={styles.input}
           />
         </div>
+
+        <div className="form-group mt-4">
+        <label htmlFor="details" className={styles.label}>
+            Rack Details
+          </label>
+
+          <div class="relative w-full min-w-[200px]">
+
+            <textarea
+              className={styles.input}
+              placeholder=""
+              name="details"
+              value={item.details}
+              onChange={handleChange}
+            ></textarea>
+
+          </div>
+        </div>
         {GmapKey && (
           <div
             className="form-group py-6"
@@ -268,33 +286,32 @@ const ItemCreate = () => {
               Location
             </label>
             <GoogleMapReact
-            key={mapKey} // Set key to force re-render
-            onClick={handleMapClick}
-            bootstrapURLKeys={{ key: GmapKey.toString() }}
-            defaultCenter={defaultProps.center}
-            defaultZoom={defaultProps.zoom}
-            center={center}
-            zoom={zoom}
-            options={(maps) => {
-              return {
-                mapTypeControl: true,
-                mapTypeControlOptions: {
-                  style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                  position: maps.ControlPosition.BOTTOM_CENTER,
-                  mapTypeIds: [
-                    maps.MapTypeId.ROADMAP,
-                    maps.MapTypeId.SATELLITE,
-                    maps.MapTypeId.HYBRID,
-                  ],
-                },
-                zoomControl: true,
-                clickableIcons: false,
-              };
-            }}
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
-          />
-
+              key={mapKey} // Set key to force re-render
+              onClick={handleMapClick}
+              bootstrapURLKeys={{ key: GmapKey.toString() }}
+              defaultCenter={defaultProps.center}
+              defaultZoom={defaultProps.zoom}
+              center={center}
+              zoom={zoom}
+              options={(maps) => {
+                return {
+                  mapTypeControl: true,
+                  mapTypeControlOptions: {
+                    style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: maps.ControlPosition.BOTTOM_CENTER,
+                    mapTypeIds: [
+                      maps.MapTypeId.ROADMAP,
+                      maps.MapTypeId.SATELLITE,
+                      maps.MapTypeId.HYBRID,
+                    ],
+                  },
+                  zoomControl: true,
+                  clickableIcons: false,
+                };
+              }}
+              yesIWantToUseGoogleMapApiInternals
+              onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
+            />
           </div>
         )}
 
@@ -308,15 +325,4 @@ const ItemCreate = () => {
   );
 };
 
-
-
-
-
 export default ItemCreate;
-
-
-
-
-
-
-

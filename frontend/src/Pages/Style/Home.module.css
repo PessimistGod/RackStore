@@ -178,6 +178,8 @@
   }
 
 
+
+
   
 /* Responsive Styles */
 
@@ -207,3 +209,15 @@
 .card .btn_delete_product:hover{
     background-color: rgb(255, 0, 0);
 } 
+
+
+.details__Button{
+    background-color: rgb(39, 144, 39) !important;
+    background: linear-gradient(to right, rgb(104, 216, 104) 0%, green 100%) !important;
+    font-weight: bolder;
+    color: white;
+}
+.details__Button:hover{
+    background-color: lightgreen !important;
+    background: linear-gradient(to right, green 0%, lightgreen 100%) !important;
+}

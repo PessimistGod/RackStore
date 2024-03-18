@@ -1,11 +1,11 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import CanvasJSReact from "@canvasjs/react-charts";
-import Loading from '../../Components/Loading';
+import Loading from "../../Components/Loading";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
-let CanvasJSChart = CanvasJSReact.CanvasJSChart;
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const AdminHome = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -19,86 +19,50 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       if (!decodedToken.isAdmin) {
-        navigate('/login')
+        navigate("/login");
       }
     }
-  }, [navigate])
+  }, [navigate]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        setLoading(true)
-        let response = await axios.get(`${API_URL}/api/user`);
-        let filteredResponse = response.data.filter(
-          ({ isAdmin, isMerchant }) => !isAdmin && !isMerchant
-        );
-        setUserLength(filteredResponse.length);
-        setLoading(false)
-      } catch (error) {
-        console.log("Error fetching users:", error);
-        setLoading(false)
-      }
-    };
-    fetchUsers();
-  }, [API_URL]);
+        setLoading(true);
 
-  useEffect(() => {
-    const fetchMerchants = async () => {
-      try {
-        setLoading(true)
-        let response = await axios.get(`${API_URL}/api/user`);
-        let filteredResponse = response.data.filter(
-          ({ isAdmin, isMerchant }) => !isAdmin && isMerchant
-        );
-        setMerchantLength(filteredResponse.length);
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        console.log("Error fetching merchants:", error);
+        // Fetch users
+        const userResponse = await axios.get(`${API_URL}/api/user`);
+        const users = userResponse.data;
+        setUserLength(users.filter(({ isAdmin, isMerchant }) => !isAdmin && !isMerchant).length);
+        setMerchantLength(users.filter(({ isAdmin, isMerchant }) => !isAdmin && isMerchant).length);
 
-      }
-    };
-    fetchMerchants();
-  }, [API_URL]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true)
-        let response = await axios.get(`${API_URL}/api/prod/products`);
-        const uniqueUserIds = new Set(response.data.map(product => String(product.userId)));
+        // Fetch products
+        const productResponse = await axios.get(`${API_URL}/api/prod/products`);
+        const products = productResponse.data;
+        const uniqueUserIds = new Set(products.map((product) => String(product.userId)));
+        setProductLength(products.length);
         setActiveMerchant((uniqueUserIds.size / merchantLength) * 100);
-        setProductLength(response.data.length);
-        setLoading(false)
-      } catch (error) {
-        console.log("Error fetching products:", error);
-        setLoading(false)
-      }
-    };
-    fetchProducts();
-  }, [API_URL, merchantLength]);
 
-  useEffect(() => {
-    const analyseData = async () => {
-      try {
-        setLoading(true)
-        let response = await axios.get(`${API_URL}/api/user/analyze-history`);
-        if (response.data) {
-          setActiveUser((response.data.uniqueUserIdsCount / userLength) * 100);
-          setActiveProduct((response.data.uniqueProductIdsCount / productLength) * 100);
-          setLoading(false);
+        // Analyze history
+        const historyResponse = await axios.get(`${API_URL}/api/user/analyze-history`);
+        const historyData = historyResponse.data;
+        if (historyData) {
+          setActiveUser((historyData.uniqueUserIdsCount / userLength) * 100);
+          setActiveProduct((historyData.uniqueProductIdsCount / productLength) * 100);
         }
+
+        setLoading(false);
       } catch (error) {
-        console.log("Error analysing data:", error);
-        setLoading(false)
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
-    analyseData();
-  }, [API_URL, userLength, productLength]);
+
+    fetchData();
+  }, [API_URL, userLength, productLength, merchantLength]);
 
   const options = {
     animationEnabled: true,

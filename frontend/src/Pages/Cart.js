@@ -254,9 +254,7 @@ const Cart = () => {
         </div>
       </section>
     )}
-      {cartItems?.map(
-        (item) =>
-          item?.productId?.availability && (
+      {cartItems.length > 0 && (
             <div className={styles.checkout_form}>
               <input
                 type="text"
@@ -300,7 +298,7 @@ const Cart = () => {
               </div>
             </div>
           )
-      )}
+          }
     </div>
   );
 };

@@ -6,7 +6,7 @@ const historySchema = new mongoose.Schema({
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductDetails',
+        ref: 'Product',
         required: true,
       },
       quantity: {
@@ -17,11 +17,11 @@ const historySchema = new mongoose.Schema({
   ],
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserDetails',
+    ref: 'User',
     required: true,
   },
 }, { timestamps: true });
 
-const History = mongoose.model('OrderHistory', historySchema);
+const History = mongoose.model('History', historySchema);
 
 module.exports = History;

@@ -17,6 +17,9 @@ import ManageRack from './Pages/Admin/ManageRack';
 import MerchantList from './Pages/Admin/MerchantList';
 import UsersList from './Pages/Admin/UsersList';
 import AdminHome from './Pages/Admin/AdminHome';
+import UserSupportChat from './Pages/UserSupportChat';
+import ChatSupport from './Pages/Admin/ChatSupport';
+import MerchantChat from './Pages/Merchant/MerchantChat';
 
 function App() {
   return (
@@ -48,6 +51,14 @@ function App() {
             <Route path="/admin-signup" element={<AdminSignup />}/>
 
             <Route path="/history" element={<History />}/>
+
+
+            <Route path="/chat" element={<UserSupportChat />}/>
+            <Route path="/chat-users" element={<ChatSupport />}/>
+            <Route path="/merchant-chat" element={<MerchantChat />}/>
+
+
+
 
 
 

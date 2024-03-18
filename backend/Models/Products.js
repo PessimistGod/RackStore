@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema({
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserDetails',
+        ref: 'User',
         required: true,
     },
     
@@ -48,6 +48,6 @@ const productSchema = new mongoose.Schema({
 
 mongoose.models = {}
 
-const Product = mongoose.model('Product Details', productSchema)
+const Product = mongoose.model('Product', productSchema)
 
 module.exports = Product;

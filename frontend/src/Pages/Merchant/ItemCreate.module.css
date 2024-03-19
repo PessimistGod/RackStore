@@ -121,3 +121,50 @@
     object-fit: contain;
 }
 
+
+/* Add styles for file upload */
+.file_upload_label {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.file_upload_label input[type="file"] {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file_upload_label span {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selected_file_name {
+  display: block;
+  margin-top: 5px;
+}
+
+/* Adjust styles for clear button */
+.clear_button {
+  margin-left: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 16px;
+  cursor: pointer;
+}
+
+.clear_button:hover {
+  background-color: #d32f2f;
+}

@@ -6,7 +6,7 @@ const ProductDetails = ({ product, setModelDetails,handleAddToCart }) => {
     <div className="">
       <div class="bg-gray-100 dark:bg-gray-800 py-8 relative">
         <div
-          className="right-10 absolute cursor-pointer"
+          className="md:right-10 absolute cursor-pointer top-0 right-0"
           onClick={() => setModelDetails(null)}
         >
           <IoIosClose size={40} />

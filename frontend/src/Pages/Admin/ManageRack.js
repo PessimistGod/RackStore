@@ -71,7 +71,14 @@ const ManageRack = () => {
     <div className={ styles.home_container}>
       {products.map((product) => (
         <div className={ styles.card} key={product._id}>
-          <img src={product.image} alt={product.productName} />
+                   {product.image && product.image.startsWith("https://") ? (
+            <img src={product.image} alt={product.productName} />
+          ) : (
+            <img
+              src={`${API_URL}/${product.image.replace(/\\/g, "/")}`}
+              alt={product.productName}
+            />
+          )}
           <div className={ styles.card_details}>
             <h3>{product.productName}</h3>
             <p>Price: ₹{product.price}</p>

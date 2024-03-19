@@ -19,8 +19,8 @@ const Home = () => {
   const [openInfoWindow, setOpenInfoWindow] = useState(null);
   const [isMerchantOrAdmin, setIsMerchantOrAdmin] = useState(false);
   const [modelDetails, setModelDetails] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
-  console.log(modelDetails);
   useEffect(() => {
     const fetchData = async () => {
       const storedToken = localStorage.getItem("token");
@@ -170,19 +170,27 @@ const Home = () => {
 
     // Close info window when clicking outside of it
     window.addEventListener("click", (e) => {
-      if (openInfoWindow && openInfoWindow.getContent && !openInfoWindow.getContent().contains(e.target)) {
+      if (
+        openInfoWindow &&
+        openInfoWindow.getContent &&
+        !openInfoWindow.getContent().contains(e.target)
+      ) {
         openInfoWindow.close();
         setOpenInfoWindow(null);
       }
-      
     });
   };
 
-  if(modelDetails) return (
-    <div>
-      <ProductDetails product={modelDetails} setModelDetails={setModelDetails} handleAddToCart={handleAddToCart}/>
-    </div>
-  );
+  if (modelDetails)
+    return (
+      <div>
+        <ProductDetails
+          product={modelDetails}
+          setModelDetails={setModelDetails}
+          handleAddToCart={handleAddToCart}
+        />
+      </div>
+    );
 
   return (
     <>
@@ -191,7 +199,14 @@ const Home = () => {
           .filter((product) => product.availability)
           .map((product) => (
             <div className={styles.card} key={product._id}>
-              <img src={product.image} alt={product.name} />
+              {product.image && product.image.startsWith("https://") ? (
+                <img src={product.image} alt={product.productName} />
+              ) : (
+                <img
+                  src={`${API_URL}/${product.image.replace(/\\/g, "/")}`}
+                  alt={product.productName}
+                />
+              )}
               <div className={styles.card_details}>
                 <h3>{product.productName}</h3>
                 <p>Price: ₹{product.price}</p>

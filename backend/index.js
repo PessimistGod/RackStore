@@ -14,6 +14,8 @@ const ws = require("ws");
 const jwt = require("jsonwebtoken");
 const Message = require("./Models/Message");
 const WebSocket = require("ws");
+const multer = require('multer');
+const path = require('path');
 
 
 const app = express();
@@ -32,6 +34,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 connectDB();
 
@@ -46,6 +49,7 @@ app.use("/api/orders", orders);
 app.use("/api/razorpay", checkout);
 app.use("/api/user", users);
 app.use("/api/message", MessageRoute);
+
 
 
 const server = app.listen(port, () => {

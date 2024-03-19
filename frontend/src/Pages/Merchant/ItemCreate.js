@@ -15,6 +15,8 @@ const ItemCreate = () => {
 
   const [GmapKey, setGmapKey] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageType, setImageType] = useState("");
 
   const [zoom, setZoom] = useState(4);
   const [center, setCenter] = useState({
@@ -37,20 +39,16 @@ const ItemCreate = () => {
     image: "",
     state: "",
     pincode: "",
-    details:"",
+    details: "",
     lati: "",
     longi: "",
     city: "",
   });
   const [mapKey, setMapKey] = useState(0);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setItem({ ...item, [name]: value });
-  };
-
-  const handleImageChange = (e) => {
-    const image = e.target.value;
-    setItem({ ...item, image });
   };
 
   useEffect(() => {
@@ -82,13 +80,36 @@ const ItemCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productData = { ...item, userId: uid };
+    let imageUrl = item.image;
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      try {
+        const response = await axios.post(
+          `${API_URL}/api/prod/image/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        imageUrl = response.data.imageUrl;
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        showErrorToast("Error uploading image");
+        return;
+      }
+    }
+
+    const productData = { ...item, userId: uid, image: imageUrl };
     try {
       const response = await axios.post(
         `${API_URL}/api/prod/products`,
         productData
       );
       if (response) {
+        // Reset form fields
         setItem({
           productName: "",
           days: "",
@@ -96,12 +117,13 @@ const ItemCreate = () => {
           image: "",
           state: "",
           pincode: "",
-          details:"",
+          details: "",
           lati: "",
           longi: "",
           city: "",
         });
         setSelectedLocation(null);
+        setSelectedFile(null);
         setCenter(defaultProps?.center);
         setZoom(defaultProps?.zoom);
       }
@@ -152,17 +174,44 @@ const ItemCreate = () => {
   };
 
   useEffect(() => {
-    setMapKey((prevKey) => prevKey + 1); // Update the key when selectedLocation changes
+    setMapKey((prevKey) => prevKey + 1);
   }, [selectedLocation]);
+
+  const clearImage = () => {
+    setItem({ ...item, image: "" });
+    setSelectedFile(null);
+  };
+
+  const handleImageChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      if (value.trim().length > 0 || value === "") {
+        setItem({ ...item, image: value });
+        setImageType("url");
+        setSelectedFile(null);
+      } else {
+        setImageType("file");
+        if (files && files.length > 0) {
+          setSelectedFile(files[0]);
+        }
+      }
+    } else {
+      setImageType("file");
+      if (files && files.length > 0) {
+        setSelectedFile(files[0]);
+        setItem({ ...item, image: "" });
+      }
+    }
+  };
 
   return (
     <div className={styles.form_container_create}>
       <h2>Create a New Rack</h2>
       <form className={styles.item_form} onSubmit={handleSubmit}>
+        <label htmlFor="image" className={styles.label}>
+          Image URL or Upload
+        </label>
         <div className={styles.form_group}>
-          <label htmlFor="image" className={styles.label}>
-            Image URL
-          </label>
           <input
             type="text"
             id="image"
@@ -170,17 +219,58 @@ const ItemCreate = () => {
             value={item.image}
             onChange={handleImageChange}
             className={styles.input}
+            placeholder="Enter Image URL"
           />
-          {item.image && (
-            <div className={styles.image_preview}>
-              <img
-                src={item.image}
-                alt="Item Preview"
-                className={styles.preview}
+
+          <div className="flex flex-col">
+            <label htmlFor="imageUpload" className={styles.file_upload_label}>
+              <span>Upload Image</span>
+              <input
+                type="file"
+                id="imageUpload"
+                name="file"
+                onChange={handleImageChange}
+                className={styles.file_upload_input}
+                accept="image/*"
               />
+            </label>
+
+            <div className={styles.image_preview_container}>
+              {imageType === "url" && item.image && (
+                <img
+                  src={item.image}
+                  alt="Preview"
+                  className={styles.image_preview}
+                />
+              )}
+              {selectedFile && (
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  alt="Preview"
+                  className={styles.image_preview}
+                />
+              )}
+              {item.image && !selectedFile && imageType !== "url" && (
+                <img
+                  src={item.image}
+                  alt="Preview"
+                  className={styles.image_preview}
+                />
+              )}
             </div>
-          )}
+
+            {(item.image || selectedFile) && (
+              <button
+                type="button"
+                onClick={clearImage}
+                className={`${styles.clear_button} whitespace-nowrap`}
+              >
+                Clear Image
+              </button>
+            )}
+          </div>
         </div>
+
         <div className={styles.form_group}>
           <label htmlFor="productName" className={styles.label}>
             Rack Name
@@ -261,12 +351,11 @@ const ItemCreate = () => {
         </div>
 
         <div className="form-group mt-4">
-        <label htmlFor="details" className={styles.label}>
+          <label htmlFor="details" className={styles.label}>
             Rack Details
           </label>
 
           <div class="relative w-full min-w-[200px]">
-
             <textarea
               className={styles.input}
               placeholder=""
@@ -274,7 +363,6 @@ const ItemCreate = () => {
               value={item.details}
               onChange={handleChange}
             ></textarea>
-
           </div>
         </div>
         {GmapKey && (

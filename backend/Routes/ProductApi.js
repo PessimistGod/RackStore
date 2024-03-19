@@ -1,6 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const Product = require("../Models/Products");
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + ext); // Generate unique filename for uploaded file
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Create a new product
 router.post("/products", async (req, res) => {
@@ -36,6 +53,21 @@ router.post("/products", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+router.post('/image/upload', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const imageUrl = req.file.path; // Assuming the file path will serve as the image URL
+    res.json({ imageUrl });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -98,5 +130,7 @@ router.delete("/products/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 module.exports = router;

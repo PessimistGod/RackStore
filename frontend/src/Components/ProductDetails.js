@@ -2,6 +2,8 @@ import React from "react";
 import { IoIosClose } from "react-icons/io";
 
 const ProductDetails = ({ product, setModelDetails,handleAddToCart }) => {
+
+    const API_URL = process.env.REACT_APP_API_URL;
   return (
     <div className="">
       <div class="bg-gray-100 dark:bg-gray-800 py-8 relative">
@@ -15,11 +17,15 @@ const ProductDetails = ({ product, setModelDetails,handleAddToCart }) => {
           <div class="flex flex-col md:flex-row -mx-4">
             <div class="md:flex-1 px-4">
               <div class="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
-                <img
-                  class="w-full h-full object-cover"
-                  src={product.image}
-                  alt="Product"
-                />
+
+                          {product.image && product.image.startsWith("https://") ? (
+            <img class="w-full h-full object-cover" src={product.image} alt={product.productName} />
+          ) : (
+            <img class="w-full h-full object-cover"
+              src={`${API_URL}/${product.image.replace(/\\/g, "/")}`}
+              alt={product.productName}
+            />
+          )}
               </div>
               <div class="flex -mx-2 mb-4">
                 <div class="w-full px-2">

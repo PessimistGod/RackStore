@@ -4,6 +4,7 @@ const Cart = require('../Models/Cart');
 const History = require('../Models/History');
 const Orders = require('../Models/Orders')
 const Product = require('../Models/Products');
+const MerchantHistory = require('../Models/MerchantHistory');
 
 // Route to add a product to the cart
 router.post('/add-to-cart', async (req, res) => {
@@ -156,6 +157,11 @@ router.get('/count/:userId', async (req, res) => {
                 userId: userId,
             });
 
+            await MerchantHistory.create({
+                userDetails: req.body.userDetails,
+                cartItems: [cartItem], // Create an array with a single cart item
+                userId: userId,
+            });
             // Set product availability to false
             const productId = cartItem.productId;
             await Product.findByIdAndUpdate(productId, { availability: false });

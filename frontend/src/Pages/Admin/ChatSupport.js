@@ -12,6 +12,7 @@ const ChatSupport = ({ userType }) => {
   const [user, setUser] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null)
   const [sortedUsers, setSortedUsers] = useState(null);
+  const [initialUsers, setInitialUsers] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL;
   const messagesEndRef = useRef(null);
 
@@ -132,6 +133,7 @@ const ChatSupport = ({ userType }) => {
     );
 
     setSortedUsers(sortedUsers);
+    setInitialUsers(sortedUsers)
   }, [allMessages, user]);
 
   useEffect(() => {
@@ -145,7 +147,43 @@ const ChatSupport = ({ userType }) => {
   const selectedUserMessages = allMessages.filter(
     (message) => message.from === selectedUser || message.to === selectedUser
   );
-  console.log("Selected User",selectedUserMessages)
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchInputChange = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchQuery(searchTerm);
+  
+    let searchWords = [];
+  
+    if (searchTerm) {
+      searchWords = searchTerm.split(' '); 
+      const filtered = initialUsers.filter(item =>
+        searchWords.some(word => item.name.toLowerCase().includes(word))
+      );
+      setSortedUsers(filtered);
+    } else {
+      setSortedUsers(initialUsers);
+    }
+  
+    if (event.key === 'Backspace') {
+      setSortedUsers(initialUsers);
+  
+      if (searchTerm) {
+        searchWords = searchTerm.split(' '); 
+        const filtered = initialUsers.filter(item =>
+          searchWords.some(word => item.name.toLowerCase().includes(word))
+        );
+        setSortedUsers(filtered);
+      }
+    }
+  };
+  
+  
+  
+  
+
+
   return (
     <div>
       <div class="container mx-auto shadow-sm rounded-sm">
@@ -154,7 +192,8 @@ const ChatSupport = ({ userType }) => {
             <div class="border-b-2 py-4 px-2">
               <input
                 type="text"
-                placeholder="search chatting"
+                onChange={handleSearchInputChange}
+                placeholder="Search User"
                 class="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
               />
             </div>

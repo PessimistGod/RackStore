@@ -6,12 +6,11 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../Context/ToastContext";
 
-const MerchantOrders = () => {
+const MerchantHistory = () => {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState({});
-  const [loading, setLoading] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
-  const { showSuccessToast, showErrorToast } = useToast();
+  const { showErrorToast } = useToast();
 
   const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ const MerchantOrders = () => {
         const decodedToken = jwtDecode(token);
         if (decodedToken.isMerchant) {
           const response = await axios.get(
-            `${API_URL}/api/orders/get-orders/${decodedToken.id}`
+            `${API_URL}/api/orders/get-orders-history/${decodedToken.id}`
           );
 
           setOrders(response.data);
@@ -70,49 +69,34 @@ const MerchantOrders = () => {
     }
   }, [navigate]);
 
-  const handleDeliveredClick = async (orderId) => {
-    try {
-      setLoading(true);
-
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      await axios.delete(`${API_URL}/api/orders/delete-order/${orderId}`);
-
-      // Update the orders list
-      const updatedOrders = orders.filter((order) => order._id !== orderId);
-      setOrders(updatedOrders);
-      showSuccessToast("Delivered Success");
-    } catch (error) {
-      console.error("Error marking as delivered:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  console.log(products)
   return (
     // <div className= {styles.body}>
     <div className={styles.order_list}>
-      <h2 className="flex justify-center items-center ml-0">ORDER LIST</h2>
+      <h2 className="flex justify-center items-center ml-0">ORDER HISTORY</h2>
       {orders.map((order) => (
         <div className={styles.order_card} key={order._id}>
           {order.cartItems.map((item, index) => (
             <div className={styles.product_details} key={index}>
               <div className={styles.product_image}>
-                {products && products[item.productId] && products[item.productId].image &&
+                {products &&
+                products[item.productId] &&
+                products[item.productId].image &&
                 products[item.productId].image.startsWith("https://") ? (
                   <img
                     src={products[item.productId].image}
                     alt={products[item.productId].productName}
                   />
                 ) : (
-                  products && products[item.productId] && (<img
-                    src={`${API_URL}/${products[item.productId].image.replace(
-                      /\\/g,
-                      "/"
-                    )}`}
-                    alt={products[item.productId].productName}
-                  />)
+                  products &&
+                  products[item.productId] && (
+                    <img
+                      src={`${API_URL}/${products[item.productId].image.replace(
+                        /\\/g,
+                        "/"
+                      )}`}
+                      alt={products[item.productId].productName}
+                    />
+                  )
                 )}
               </div>
 
@@ -150,13 +134,6 @@ const MerchantOrders = () => {
               </div>
             </div>
           ))}
-          <button
-            className={styles.deliver_button}
-            onClick={() => handleDeliveredClick(order._id)}
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Delivered"}
-          </button>
         </div>
       ))}
     </div>
@@ -164,4 +141,4 @@ const MerchantOrders = () => {
   );
 };
 
-export default MerchantOrders;
+export default MerchantHistory;

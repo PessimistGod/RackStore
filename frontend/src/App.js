@@ -20,6 +20,7 @@ import AdminHome from './Pages/Admin/AdminHome';
 import UserSupportChat from './Pages/UserSupportChat';
 import ChatSupport from './Pages/Admin/ChatSupport';
 import MerchantChat from './Pages/Merchant/MerchantChat';
+import MerchantHistory from './Pages/Merchant/MerchantHistory';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/merchant-orders" element={<MerchantOrders />}/>
             <Route path="/merchant-create" element={<ItemCreate />}/>
             <Route path="/merchant-manage" element={<ManageMerchantRack />}/>
+            <Route path="/merchant-history" element={<MerchantHistory />}/>
 
 
 

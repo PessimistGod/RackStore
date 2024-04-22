@@ -71,7 +71,7 @@ wss.on("connection", (connection, req) => {
     if (tokenCookieString) {
       const token = tokenCookieString.split("=")[1];
       if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
+        jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => { 
           if (err) {
             console.error("Error verifying JWT token:", err);
             return;

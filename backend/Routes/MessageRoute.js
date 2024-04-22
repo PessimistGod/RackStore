@@ -86,6 +86,64 @@ router.get("/admin/support", async (req, res) => {
 
 
 
+router.get("/merchants/:userId/:merchId", async (req, res) => {
+  try {
+    const { userId, merchId } = req.params;
+
+    const MerchantMessages = await Message.find({ from: merchId, to: userId });
+    const UserMessages = await Message.find({ to: merchId, from: userId });
+
+    const allMessages = [...MerchantMessages, ...UserMessages];
+
+    const sortedMessages = allMessages.sort((a, b) => a.createdAt - b.createdAt);
+
+    res.status(200).json(sortedMessages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+router.get("/merchants/:merchId", async (req, res) => {
+  try {
+    const { merchId } = req.params;
+
+    // Find all messages sent to the merchant
+    const allUserMessages = await Message.find({ to: merchId });
+
+    // Extract unique sender user IDs
+    const fromUserIds = new Set(allUserMessages.map((message) => message.from));
+
+    // Fetch users based on their IDs
+    const users = await User.find({ _id: { $in: Array.from(fromUserIds) } });
+
+    // Sort users based on the timestamp of their latest message to the merchant
+    users.sort((a, b) => {
+      // Find the latest message sent by each user to the merchant
+      const latestMessageA = allUserMessages.find((message) => message.from.toString() === a._id.toString());
+      const latestMessageB = allUserMessages.find((message) => message.from.toString() === b._id.toString());
+
+      // If no messages found for user A, prioritize user B
+      if (!latestMessageA) return 1;
+      // If no messages found for user B, prioritize user A
+      if (!latestMessageB) return -1;
+
+      // Compare the timestamps of the latest messages
+      return new Date(latestMessageB.createdAt) - new Date(latestMessageA.createdAt);
+    });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
+
+
 router.get("/merchants", async (req, res) => {
     try {
         const merchants = await Product.find({}).populate('userId'); // Populate the 'userId' field

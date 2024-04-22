@@ -56,12 +56,12 @@ const History = () => {
           {order.cartItems.map((item, index) => (
             <div className={styles.product_details} key={index}>
               <div className={styles.product_image}>
-                {products[item.productId].image && products[item.productId].image.startsWith("https://") ? (
-                <img src={products[item.productId].image} alt={products[item.productId].productName} />
+                {products[item.productId]?.image && products[item.productId]?.image.startsWith("https://") ? (
+                <img src={products[item.productId]?.image} alt={products[item.productId]?.productName} />
               ) : (
                 <img
-                  src={`${API_URL}/${products[item.productId].image.replace(/\\/g, "/")}`}
-                  alt={products[item.productId].productName}
+                  src={`${API_URL}/${products[item.productId]?.image.replace(/\\/g, "/")}`}
+                  alt={products[item.productId]?.productName}
                 />
               )}
               </div>

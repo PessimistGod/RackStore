@@ -93,7 +93,7 @@ const UserSupportChat = ({ userType }) => {
 
   function sendMessage() {
     ws.send(JSON.stringify({ text: message, toAdmin: "isAdmin" }));
-    setMessage("");
+    setMessage(""); 
   }
 
   useEffect(() => {

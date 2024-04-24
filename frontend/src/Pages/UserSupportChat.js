@@ -90,7 +90,7 @@ const UserSupportChat = ({ userType }) => {
       console.error("Error parsing JSON data:", error);
     }
   }
-
+ 
   function sendMessage() {
     ws.send(JSON.stringify({ text: message, toAdmin: "isAdmin" }));
     setMessage(""); 

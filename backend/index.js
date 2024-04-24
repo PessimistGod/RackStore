@@ -124,7 +124,7 @@ wss.on("connection", (connection, req) => {
           from: connection.id,
           role:"merchant",
           to,
-          content: text,
+          content: text, 
         });
         await messageReceived.save();
         

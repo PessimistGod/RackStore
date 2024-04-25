@@ -21,6 +21,7 @@ import UserSupportChat from './Pages/UserSupportChat';
 import ChatSupport from './Pages/Admin/ChatSupport';
 import MerchantChat from './Pages/Merchant/MerchantChat';
 import MerchantHistory from './Pages/Merchant/MerchantHistory';
+import MerchantSupportChat from './Pages/Merchant/MerchantSupportChat';
 
 function App() {
   return (
@@ -56,6 +57,8 @@ function App() {
 
 
             <Route path="/chat" element={<UserSupportChat />}/>
+            <Route path="/help-support" element={<MerchantSupportChat />}/>
+
             <Route path="/chat-users" element={<ChatSupport />}/>
             <Route path="/merchant-chat" element={<MerchantChat />}/>
 

@@ -25,14 +25,26 @@ const ChatSupport = ({ userType }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      let response = await axios.get(`${API_URL}/api/user`);
-      let filteredResponse = response.data.filter(
-        ({ isAdmin, isMerchant }) => !isAdmin && !isMerchant
-      );
-      setUser(filteredResponse);
+      try {
+        let response = await axios.get(`${API_URL}/api/user`);
+        let filteredResponse = response.data.filter(
+          ({ isAdmin }) => !isAdmin
+        ).map(user => {
+    if (!user.isAdmin) {
+          user.name = user.isMerchant 
+          ? <span>{user.name} <span style={{ color: 'blue' }}>-[M]</span></span>
+          : <span>{user.name} <span style={{ color: 'green' }}>-[U]</span></span>;
+      }
+          return user;
+        });
+        setUser(filteredResponse);
+      } catch (error) {
+        console.log(error)
+      }
     };
     fetchUsers();
   }, [API_URL]);
+  
 
 
   useEffect(() => {
@@ -92,8 +104,9 @@ const ChatSupport = ({ userType }) => {
         const fetchUsers = async () => {
           let response = await axios.get(`${API_URL}/api/user`);
           let filteredResponse = response.data.filter(
-            ({ isAdmin, isMerchant }) => !isAdmin && !isMerchant
+            ({ isAdmin }) => !isAdmin
           );
+          console.log("filteredResponse",filteredResponse)
           setUser([...filteredResponse]);
         };
         fetchUsers();

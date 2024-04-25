@@ -9,6 +9,16 @@ module.exports = {
           enforce: "pre",
           use: ["source-map-loader"],
         });
+
+        // Initialize webpackConfig.ignoreWarnings if it's not defined
+        if (!webpackConfig.ignoreWarnings) {
+          webpackConfig.ignoreWarnings = [];
+        }
+
+        // Ignore specific warnings
+        webpackConfig.ignoreWarnings.push({
+          message: /Failed to parse source map/,
+        });
       }
       
       return webpackConfig;

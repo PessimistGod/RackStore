@@ -105,9 +105,15 @@ const ChatSupport = ({ userType }) => {
           let response = await axios.get(`${API_URL}/api/user`);
           let filteredResponse = response.data.filter(
             ({ isAdmin }) => !isAdmin
-          );
-          console.log("filteredResponse",filteredResponse)
-          setUser([...filteredResponse]);
+          ).map(user => {
+      if (!user.isAdmin) {
+            user.name = user.isMerchant 
+            ? <span>{user.name} <span style={{ color: 'blue' }}>-[M]</span></span>
+            : <span>{user.name} <span style={{ color: 'green' }}>-[U]</span></span>;
+        }
+            return user;
+          });
+          setUser(filteredResponse);
         };
         fetchUsers();
       }

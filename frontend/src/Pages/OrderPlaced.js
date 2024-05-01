@@ -22,7 +22,7 @@ const OrderPlaced = () => {
         <h2>Order Placed Successfully</h2>
         <p>Thank you for your order. Your order has been successfully placed.</p>
         <div className={styles.home_button}> 
-        <Link to="/">Home</Link>
+        <Link to="/rack-store">Home</Link>
         </div>
       </div>
     </div>

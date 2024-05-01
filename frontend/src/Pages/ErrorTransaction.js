@@ -21,7 +21,7 @@ const ErrorTransaction = () => {
       <h2>OOPS!!! There was a Error Processing</h2>
       <p>Please Try Again in Sometime.</p>
       <div className={styles.home_button}> 
-      <Link to="/">Home</Link>
+      <Link to="/rack-store">Home</Link>
       </div>
     </div>
   </div>

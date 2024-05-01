@@ -22,6 +22,7 @@ import ChatSupport from './Pages/Admin/ChatSupport';
 import MerchantChat from './Pages/Merchant/MerchantChat';
 import MerchantHistory from './Pages/Merchant/MerchantHistory';
 import MerchantSupportChat from './Pages/Merchant/MerchantSupportChat';
+import Landing from './Pages/Landing';
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home />} />
+            <Route index element={<Landing />}/>
+            <Route path="/rack-store" element={<Home />} />
+
             <Route path="/cart" element={<Cart />}/>
             <Route path="/order-placed" element={<OrderPlaced />}/>
             <Route path="/transaction-error" element={<ErrorTransaction />}/>

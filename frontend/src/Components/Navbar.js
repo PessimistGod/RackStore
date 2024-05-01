@@ -45,7 +45,7 @@ const Navbar = () => {
     <>
       <section className="bg-blue-500">
         <nav className="relative px-4 py-4 flex justify-between items-center bg-white shadow-md">
-          <Link className="text-3xl font-bold leading-none" to={""}>
+          <Link className="text-3xl font-bold leading-none" to={"/rack-store"}>
             <img
               src="./D2R logo.jpeg"
               className="mix-blend-multiply w-14 ml-3"
@@ -324,7 +324,7 @@ const Navbar = () => {
                 <li>
                   <Link
                     className="text-sm text-gray-500 hover:text-gray-700"
-                    to={""}
+                    to={"/rack-store"}
                   >
                     Home
                   </Link>
@@ -448,7 +448,7 @@ const Navbar = () => {
           <div className="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
           <nav className="fixed top-0 left-0 bottom-0 flex flex-col w-5/6 max-w-sm py-6 px-6 bg-white border-r overflow-y-auto">
             <div className="flex items-center mb-8">
-              <Link className="mr-auto text-3xl font-bold leading-none" to={""}>
+              <Link className="mr-auto text-3xl font-bold leading-none" to={"/rack-store"}>
                 <img
                   src="./D2R logo.jpeg"
                   className="mix-blend-multiply w-14 ml-3"
@@ -582,7 +582,7 @@ const Navbar = () => {
                     <li className="mb-1">
                       <Link
                         className="block p-4 text-sm font-semibold text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded"
-                        to={""}
+                        to={"/rack-store"}
                       >
                         Home
                       </Link>

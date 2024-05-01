@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   const [buttonText, setButtonText] = useState("Sign Up");
@@ -929,7 +930,7 @@ const Landing = () => {
             </div>
 
             <div className="bg-[#f55d3e] text-white px-4 py-2 rounded-xl">
-              {buttonText}
+              <Link to={buttonText === "Home" ? '/rack-store' : '/login'}>{buttonText}</Link>
             </div>
           </div>
         </div>

@@ -113,7 +113,8 @@ const MerchantChat = ({ userType }) => {
   const fetchUsersName = async (merchId) => {
     try {
       const response = await axios.get(`${API_URL}/api/message/merchants/${merchId}`);
-      setUsers(response.data)
+
+      setUsers(response.data.filter(item => !item.isAdmin && !item.isMerchant))
     } catch (error) {
       console.error("Error fetching users:", error);
     }
